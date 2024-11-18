@@ -1,0 +1,14 @@
+# -*- mode: snippet -*-
+# name: Task
+# key: task
+# condition: t
+# --
+TODO ${1}
+:PROPERTIES:
+:ID: ${2}
+:OCCASION: ${3}
+:PARENT: ${4}
+:BLOCKER: ${5}
+:TRIGGER:
+:END:
+${0}

@@ -1,0 +1,5 @@
+(custom-set-variables
+ '(auth-source-save-behavior nil)
+ '(elfeed-feeds
+   '("https://scinquisitor.substack.com/feed" "https://avtonom.org/news_rss_vk"))
+ '(package-selected-packages '(esxml)))
