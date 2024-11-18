@@ -48,3 +48,12 @@
 ;; (unpin! pinned-package another-pinned-package)
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
 ;; (unpin! t)
+
+;;(package! nov) ; for reading EPUB-books
+;;(package! nov-xwidget
+;;  :recipe (:host github :repo "chenyanming/nov-xwidget" :branch "main")) ; for better CSS in EPUB-files. Requres Emacs compilation with 'xwidget' support
+
+;;(package! pacmacs) ; pacman-like game
+
+(unpin! org-roam) ;
+(package! org-roam-ui)
