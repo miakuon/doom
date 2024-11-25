@@ -19,9 +19,7 @@
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type t)
 
-(setq
- projectile-project-search-path `("~/Documents/Code/" "~/source/" "~/.suckless/" "~/.config/")
- )
+(setq projectile-project-search-path `("~/Documents/Code/" "~/source/" "~/.suckless/" "~/.config/"))
 (emms-add-directory-tree "~/Music/")
 
 ;;(add-to-list 'default-frame-alist  '(alpha-background .8))
@@ -133,6 +131,12 @@
 (after! yasnippet
   (setq yas-snippet-dirs '("~/.config/doom/snippets"))
   )
+
+;; Elfeed
+(after! elfeed
+  (setq elfeed-search-filter "@1-month-ago +unread")
+  (setq rmh-elfeed-org-files (list "~/.config/doom/elfeed.org")))
+
 
 ;; Whenever you reconfigure a package, make sure to wrap your config in an
 ;; `after!' block, otherwise Doom's defaults may override your settings. E.g.

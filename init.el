@@ -33,11 +33,11 @@
        doom                ; what makes DOOM look the way it does
        doom-dashboard      ; a nifty splash screen for Emacs
        ;;doom-quit         ; DOOM quit-message prompts when you quit Emacs
-       (emoji +unicode +ascii)  ; 🙂
+       (emoji +unicode)    ; 🙂
        hl-todo             ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
        ;;hydra
-       indent-guides     ; highlighted indent columns
-       ligatures         ; ligatures and symbols to make your code pretty again
+       indent-guides       ; highlighted indent columns
+       ligatures           ; ligatures and symbols to make your code pretty again
        ;;minimap           ; show a map of the code on the side
        modeline            ; snazzy, Atom-inspired modeline, plus API
        ;;nav-flash         ; blink cursor line after big motions
@@ -156,7 +156,14 @@
        ;;ocaml             ; an objective camel
        (org                ; organize your plain life in plain text
         +journal           ; daily notes
-        +dragndrop
+        +dragndrop         ;
+        +brain             ; org-brain
+        +gnuplot           ; rendering src blocks
+        +contacts          ;
+        +noter             ; keeps notes in sync
+        +pandoc            ; Exporter
+        +pomodoro          ;
+        +pretty            ; pretty bullets
         +present           ; presentations in Emacs
         +roam2)            ; best PKM system
        ;;php               ; perl's insecure younger brother
@@ -195,5 +202,5 @@
        ;;twitter           ; twitter client https://twitter.com/vnought
 
        :config
-       ;;literate           ; Disguise your config as documentation
+       ;;literate          ; Disguise your config as documentation
        (default +bindings +smartparens))

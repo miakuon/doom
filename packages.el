@@ -57,3 +57,8 @@
 
 (unpin! org-roam) ;
 (package! org-roam-ui)
+
+;; (package! gedcom
+;;   :recipe (:host github :repo "emacssattic/gedcom" :files "*.el"))
+
+(package! org-fancy-priorities :disable t) ;; they aren't pretty
