@@ -1,0 +1,30 @@
+#+begin_example
+ #+link: toobnix https://toobnix.org/feeds/videos.xml?videoChannelId=
+#+end_example
+
+* Blogs :blog:
+** [[https://scinquisitor.substack.com/feed][Александр Панчин]]
+** [[https://qnnnp.substack.com/feed][qnnnp]]
+Коллонка - блог о ведении заметок
+** [[https://systemcrafters.net/rss/news.xml][System Crafters]] :emacs:
+* News :news:
+** https://avtonom.org/news_rss_vk :ignore:
+** Linux :linux:
+*** entry-title: \(linux\|linus\|arch\)
+*** https://archlinux.org/feeds/news/
+*** https://wiki.archlinux.org/index.php?title=Special:RecentChanges&feed=rss
+*** https://archlinux.org/feeds/packages/added/x86_64/stable-repos/
+*** https://archlinux.org/feeds/packages/removed/x86_64/stable-repos/
+*** https://archlinux.org/feeds/releases/
+* Forums :forum:
+** https://org-roam.discourse.group/posts.rss :emacs:
+Другие =RSS=-ссылки создаются по [[https://meta.discourse.org/t/finding-discourse-rss-feeds/264134][таким]] форматам
+* GitHub :github:
+Примеры ссылок
+- Repo releases: https://github.com/:owner/:repo/releases.atom
+- Repo commits: https://github.com/:owner/:repo/commits.atom
+- User activities: https://github.com/:user.atom
+- Private feed: https://github.com/:user.private.atom?token=:secret
+** entry-title: \(GitHub\|github\)
+** https://github.com/doomemacs/doomemacs/commits.atom :emacs:
+** https://github.com/qmk/qmk_firmware/tags.atom
