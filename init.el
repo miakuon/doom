@@ -202,5 +202,5 @@
        ;;twitter           ; twitter client https://twitter.com/vnought
 
        :config
-       ;;literate          ; Disguise your config as documentation
+       literate          ; Disguise your config as documentation
        (default +bindings +smartparens))
