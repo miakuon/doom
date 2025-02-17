@@ -156,6 +156,7 @@ I wrapped most of this block in (after! org).  Without this, my settings might b
 ** Org-auto-tangle
 =org-auto-tangle= allows you to add the option =#+auto_tangle: t= in your Org file so that it automatically tangles when you save the document.  I have made adding this to your file even easier by creating a function 'dt/insert-auto-tangle-tag' and setting it to a keybinding 'SPC i a'.
 
+ERROR: Нет пакета ~org-auto-tangle~
 #+begin_src emacs-lisp :tangle no
 (use-package! org-auto-tangle
   :defer t
@@ -171,7 +172,7 @@ I wrapped most of this block in (after! org).  Without this, my settings might b
   (evil-force-normal-state))
 
 (map! :leader
-      :desc "Insert auto_tangle tag" "i a" #'dt/insert-auto-tangle-tag)
+      :desc "Insert auto_tangle tag" "i t" #'dt/insert-auto-tangle-tag)
 #+end_src
 
 ** Org fonts
@@ -497,12 +498,79 @@ We need ox-man for "Org eXporting" to manpage format and ox-gemini for exporting
 #+begin_src emacs-lisp
 (after! org
   (setq org-roam-directory org-directory
-        org-roam-graph-viewer "/usr/bin/firefox")
+        org-roam-graph-viewer "/usr/bin/firefox") ; TODO поменять на qutebrowser
 
   (setq org-roam-capture-templates
-        `(("d" "default" plain "%?"
-           :target (file+head "%<%Y%m%d>-${slug}.org" "#+title: ${title}\n#+author: Mia Kuon\n#+filetags: \n\n* ${title}")
-           :unnarrowed t))))
+        `(("c" "new chit" plain "%?\n* Ссылки"
+           :target (file+head
+                    "%<%Y%m%d%H%M%S>.org"
+                    ":PROPERTIES:
+:DATE:     %<%FT%T%z>
+:END:
+,#+title: ${title}
+,#+notetype: %^{Тип заметки:записка|черновик}
+,#+filetags: %^G")
+           :unnarrowed t
+           :empty-lines-before 1)
+          ("f" "new fundamental" plain "%?\n* Ссылки\n** Связи\n** Источники"
+           :target (file+head
+                    "%<%Y%m%d%H%M%S>-${slug}.org"
+                    ":PROPERTIES:
+:ROAM_ALIASES: %^{Синонимы}
+:DATE:     %<%FT%T%z>
+:ACCESS:   %^{Доступ|public|private|personal|confidentional}
+:END:
+,#+title: ${title}
+,#+author: %n
+,#+language: %^{Язык|русский|english|français|中文}
+,#+notetype: %^{Тип заметки:фундаментальная|мысль|цитата}
+,#+filetags: %^G")
+           :unnarrowed t
+           :empty-lines-before 1)
+          ("n" "new note" plain "* ${title}\n%?\n* Ссылки"
+           :target (file+head
+                    "%<%Y%m%d%H%M%S>-${slug}.org"
+                    ":PROPERTIES:
+:ROAM_ALIASES: %^{Синонимы}
+:DATE:     %<%FT%T%z>
+:ACCESS:   %^{Доступ|public|private|personal|confidentional}
+:END:
+,#+title: ${title}
+,#+author: %n
+,#+language: %^{Язык|русский|english|français|中文}
+,#+notetype: %^{Тип заметки|заметка|статья|руководство}
+,#+filetags: %^G")
+           :unnarrowed t
+           :empty-lines-before 1)
+          ("a" "new abstract" plain "* ${title}\n%?\n* Источник\n%A\n* Ссылки\n* TODO Добавить синонимы, если нужно"
+           :target (file+head
+                    "%<%Y%m%d%H%M%S>-${slug}.org"
+                    ":PROPERTIES:
+:DATE:     %<%FT%T%z>
+:ACCESS:   %^{Доступ|public|private|personal|confidentional}
+:END:
+,#+title: ${title}
+,#+author: %n
+,#+language: %^{Язык|русский|english|français|中文}
+,#+notetype: коспект
+,#+sourcetype: %^{Тип источника|статья|видео|аудио|занятие}
+,#+filetags: %^G")
+           :unnarrowed t
+           :empty-lines-before 1)
+          ("c" "new copy" plain "* Источник\n%A\n* ${title}\n%?"
+           :target (file+head
+                    "%<%Y%m%d%H%M%S>-${slug}.org"
+                    ":PROPERTIES:
+:ROAM_ALIASES: %^{Синонимы}
+:DATE:     %<%FT%T%z>
+:ACCESS:   %^{Доступ|public|private|personal|confidentional}
+:END:
+,#+title: ${title}
+,#+author: %n
+,#+language: %^{Язык|русский|english|français|中文}
+,#+notetype: копия
+,#+sourcetype: %^{Тип источника|статья|видео|аудио|занятие}
+,#+filetags: %^G")))))
 
 (use-package! websocket
   :after org-roam)
@@ -519,7 +587,8 @@ We need ox-man for "Org eXporting" to manpage format and ox-gemini for exporting
 ;;       (:prefix ("n r" . "org-roam")
 ;;        :desc "Completion at point" "c" #'completion-at-point
 ;;        :desc "Find node"           "f" #'org-roam-node-find
-;;        :desc "Show graph"          "g" #'org-roam-graph
+;;        :desc "Show graph"          "g" #'org-roam-ui-open
+;;        :desc "Show local graph"    "G" #'org-roam-ui-node-local
 ;;        :desc "Insert node"         "i" #'org-roam-node-insert
 ;;        :desc "Capture to node"     "n" #'org-roam-capture
 ;;        :desc "Toggle roam buffer"  "r" #'org-roam-buffer-toggle))
@@ -560,6 +629,13 @@ ln -s ~/.local/share/Trash .
 * Projects
 #+begin_src emacs-lisp
 (setq projectile-project-search-path `("~/Documents/Code/" "~/source/" "~/.suckless/" "~/.config/"))
+#+end_src
+* Workspaces
+#+begin_src emacs-lisp :tangle yes
+(map! :leader
+      (:prefix "TAB"
+       :desc "Move workspace right"     [left]  #'+workspace/swap-left
+       :desc "Move workspace left"      [right] #'+workspace/swap-right))
 #+end_src
 * TODO CALENDAR
 Let's make a 12-month calendar available so we can have a calendar app that, when we click on time/date in xmobar, we get a nice 12-month calendar to view.
