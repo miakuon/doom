@@ -164,13 +164,15 @@
        ;;nix               ; I hereby declare "nix geht mehr!"
        ;;ocaml             ; an objective camel
        (org                ; organize your plain life in plain text
-        +journal           ; daily notes
-        +dragndrop         ;
         +brain             ; org-brain
-        +gnuplot           ; rendering src blocks
         +contacts          ;
+        +dragndrop         ;
+        +crypt             ;
+        +gnuplot           ; rendering src blocks
+        +journal           ; daily notes
         +noter             ; keeps notes in sync
         +pandoc            ; Exporter
+        +passwords         ;
         +pomodoro          ;
         +pretty            ; pretty bullets
         +present           ; presentations in Emacs
@@ -178,7 +180,11 @@
        ;;php               ; perl's insecure younger brother
        plantuml            ; diagrams for confusing people more
        ;;purescript        ; javascript, but functional
-       (python +lsp)       ; beautiful is better than ugly
+       (python             ; beautiful is better than ugly
+        +lsp
+        +pyright           ; support for the pyright LSP server
+        +tree-sitter       ; better syntax highlighting
+        +pyenv)            ; python virtual environment
        ;;qt                ; the 'cutest' gui framework ever
        ;;racket            ; a DSL for DSLs
        ;;raku              ; the artist formerly known as perl6
