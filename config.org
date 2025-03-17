@@ -354,7 +354,7 @@ We need ox-man for "Org eXporting" to manpage format and ox-gemini for exporting
 #+END_SRC
 
 ** Org-journal
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp :tangle yes
 (setq org-journal-dir "~/Гримуар/Дневник/"
       org-journal-date-prefix "* "
       org-journal-time-prefix "** "
@@ -482,7 +482,11 @@ We need ox-man for "Org eXporting" to manpage format and ox-gemini for exporting
 
       ))
 #+end_src
-
+** Org-download
+drag&drop functionality
+#+begin_src emacs-lisp :tangle yes
+(setq org-download-image-dir "~/Гримуар/Вложения/")
+#+end_src
 ** TODO Org-roam
 [[https://github.com/org-roam/org-roam][Org-roam]] is a plain-text knowledge management system.  Org-roam borrows principles from the =Zettelkasten= method, providing a solution for non-hierarchical note-taking.  It should also work as a plug-and-play solution for anyone already using Org-mode for their personal wiki.
 
@@ -593,6 +597,39 @@ We need ox-man for "Org eXporting" to manpage format and ox-gemini for exporting
 ;;        :desc "Capture to node"     "n" #'org-roam-capture
 ;;        :desc "Toggle roam buffer"  "r" #'org-roam-buffer-toggle))
 #+end_src
+** STRT Org-roam-capture-templates tangle
+#+begin_src emacs-lisp :tangle no
+(defun extract-org-roam-templates ()
+  "Extract org-roam-capture-templates from config.org and save to a separate file."
+  (let ((config-file "~/.doom.d/config.org")
+        (output-file "~/.doom.d/org-roam-templates.el")
+        (template-section nil))
+    (with-temp-buffer
+      ;; Читаем config.org
+      (insert-file-contents config-file)
+      (goto-char (point-min))
+
+      ;; Ищем начало секции с шаблонами
+      (when (re-search-forward "^(setq org-roam-capture-templates" nil t)
+        (beginning-of-line)
+        (setq template-section (buffer-substring (point) (progn (forward-sexp) (point)))))
+
+      ;; Если нашли, записываем в отдельный файл
+      (when template-section
+        (with-temp-file output-file
+          ;; (insert ";; Automatically extracted org-roam-capture-templates\n")
+          (insert template-section)
+          (insert "\n"))))))
+
+;; Автоматически запускать после сохранения config.org
+(defun auto-extract-org-roam-templates ()
+  "Run extract-org-roam-templates when saving config.org."
+  (when (string-equal (buffer-file-name) (expand-file-name "~/.doom.d/config.org"))
+    (extract-org-roam-templates)))
+
+(add-hook 'after-save-hook #'auto-extract-org-roam-templates)
+
+#+end_src
 * Dired
 ** Keybindings Within Dired With Peep-Dired-Mode Enabled
 If peep-dired is enabled, you will get image previews as you go up/down with 'j' and 'k'
@@ -636,6 +673,17 @@ ln -s ~/.local/share/Trash .
       (:prefix "TAB"
        :desc "Move workspace right"     [left]  #'+workspace/swap-left
        :desc "Move workspace left"      [right] #'+workspace/swap-right))
+#+end_src
+* Languages
+** Python
+#+begin_src emacs-lisp :tangle yes
+(map! :map python-mode-map
+      :localleader
+      :desc "run REPL"                "s" #'run-python                ;; SPC m s — запустить REPL
+      :desc "restart REPL"            "R" #'python-shell-restart      ;; SPC m r — перезапустить REPL
+      :desc "run"                     "c" #'python-shell-send-buffer  ;; SPC m c — запустить весь скрипт
+      :desc "run region"              "r" #'python-shell-send-region  ;; SPC m r — запустить выделенный код
+      :desc "run function"            "j" #'python-shell-send-defun)  ;; SPC m j — отправить функцию в REPL
 #+end_src
 * TODO CALENDAR
 Let's make a 12-month calendar available so we can have a calendar app that, when we click on time/date in xmobar, we get a nice 12-month calendar to view.

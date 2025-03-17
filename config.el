@@ -85,6 +85,14 @@
           (agenda "")
           (alltodo "")))))
 
+(setq org-journal-dir "~/Гримуар/Дневник/"
+      org-journal-date-prefix "* "
+      org-journal-time-prefix "** "
+      org-journal-date-format "%B %d, %Y (%A) "
+      org-journal-file-format "%Y-%m-%d.org")
+
+(setq org-download-image-dir "~/Гримуар/Вложения/")
+
 (after! org
   (setq org-roam-directory org-directory
         org-roam-graph-viewer "/usr/bin/firefox") ; TODO поменять на qutebrowser
@@ -200,6 +208,14 @@
       (:prefix "TAB"
        :desc "Move workspace right"     [left]  #'+workspace/swap-left
        :desc "Move workspace left"      [right] #'+workspace/swap-right))
+
+(map! :map python-mode-map
+      :localleader
+      :desc "run REPL"                "s" #'run-python                ;; SPC m s — запустить REPL
+      :desc "restart REPL"            "R" #'python-shell-restart      ;; SPC m r — перезапустить REPL
+      :desc "run"                     "c" #'python-shell-send-buffer  ;; SPC m c — запустить весь скрипт
+      :desc "run region"              "r" #'python-shell-send-region  ;; SPC m r — запустить выделенный код
+      :desc "run function"            "j" #'python-shell-send-defun)  ;; SPC m j — отправить функцию в REPL
 
 (use-package! calfw)
 (use-package! calfw-org)  ; for Org and Agenda
