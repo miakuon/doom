@@ -658,7 +658,54 @@ drag&drop functionality
 ,#+notetype: копия
 ,#+sourcetype: %^{Тип источника|статья|видео|аудио|занятие}
 ,#+filetags: %^G"))
-          )))
+          ("o" "Организация")
+          ("oa" "Приоритет" plain "* Цели\n%?\n* Проекты\n* Привычки\n* Заметки\n* Задачи"
+           :target (file+head
+                    "Организация/Приоритеты/${title}/area-${slug}.org"
+                    ":PROPERTIES:
+:DATE:         %<%FT%T%z>
+:ACCESS:       %^{Доступ|public|private|personal|confidentional}
+:CATEGORY:     %^{Category}
+:ROAM_ALIASES: %^{Синонимы (в кавычках)}
+:END:
+,#+title: ${title}
+,#+author: %n
+,#+language: %^{Язык|русский|english|français|中文}
+,#+notetype: организация
+,#+filetags: :${title}:%^G")
+           :unnarrowed t
+           :empty-lines-before 1)
+          ("op" "Проект" plain "* Цели\n%?\n* Заметки\n* Проекты\n* Задачи"
+           :target (file+head
+                    "Организация/Проекты/${title}/proj-${slug}.org"
+                    ":PROPERTIES:
+:DATE:         %<%FT%T%z>
+:ACCESS:       %^{Доступ|public|private|personal|confidentional}
+:CATEGORY:     %^{Category}
+:ROAM_ALIASES: %^{Синонимы (в кавычках)}
+:END:
+,#+title: ${title}
+,#+author: %n
+,#+language: %^{Язык|русский|english|français|中文}
+,#+notetype: организация
+,#+filetags: :${title}:%^G")
+           :unnarrowed t
+           :empty-lines-before 1)
+          ("or" "План" plain "* Цели\n%?\n* Заметки\n* Проекты"
+           :target (file+head
+                    "Организация/Планирование/plan-${slug}.org"
+                    ":PROPERTIES:
+:DATE:         %<%FT%T%z>
+:ACCESS:       %^{Доступ|public|private|personal|confidentional}
+:ROAM_ALIASES: %^{Синонимы (в кавычках)}
+:END:
+,#+title: ${title}
+,#+author: %n
+,#+language: %^{Язык|русский|english|français|中文}
+,#+notetype: организация
+,#+filetags: :${title}:%^G")
+           :unnarrowed t
+           :empty-lines-before 1))))
 
 (use-package! websocket
   :after org-roam)
