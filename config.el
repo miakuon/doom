@@ -193,6 +193,48 @@
 ;;        :desc "Capture to node"     "n" #'org-roam-capture
 ;;        :desc "Toggle roam buffer"  "r" #'org-roam-buffer-toggle))
 
+(defun extract-org-roam-templates ()
+  "Extract org-roam-capture-templates from config.org and save to org-roam-templates.el"
+(let ((config-file (expand-file-name "config.org" doom-user-dir))
+        (output-file (expand-file-name "org-roam-templates.el" doom-user-dir))
+        (template-section nil))
+    ;; (message "Читаем файл: %s" config-file)
+    (with-temp-buffer
+      ;; Читаем config.org
+      (insert-file-contents config-file)
+      (goto-char (point-min))
+      ;; (message "Файл загружен, ищем шаблоны...")
+
+      ;; Ищем начало секции с шаблонами
+      (when (re-search-forward "(setq org-roam-capture-templates" nil t)
+        ;; (message "Найдено в строке: %d" (line-number-at-pos))
+        (beginning-of-line)
+        (setq template-section (buffer-substring (point) (progn (forward-sexp) (point)))))
+
+      ;; Если нашли, записываем в отдельный файл
+      ;; (when template-section
+        ;; (message "Шаблоны извлечены, записываем в %s" output-file)
+        (with-temp-file output-file
+          ;; (insert ";; Automatically extracted org-roam-capture-templates\n")
+          (insert template-section)
+          (insert "\n")))))
+
+;; Автоматически запускать после сохранения config.org
+(defun auto-extract-org-roam-templates ()
+  "Run extract-org-roam-templates when saving config.org."
+  (when (string-equal (buffer-file-name)
+                      (expand-file-name "~/.dotfiles/.config/doom/config.org"))
+    (message "Extracting org-roam-templates")
+    (extract-org-roam-templates)))
+
+(add-hook 'after-save-hook #'auto-extract-org-roam-templates)
+
+(after! org
+  (setq org-brain-path org-directory))
+
+(after! org
+  (setq +org-capture-journal-file (expand-file-name "Дневник" org-directory)))
+
 (evil-define-key 'normal peep-dired-mode-map
   (kbd "j") 'peep-dired-next-file
   (kbd "k") 'peep-dired-prev-file)
