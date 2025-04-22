@@ -62,3 +62,4 @@
 ;;   :recipe (:host github :repo "emacssattic/gedcom" :files "*.el"))
 
 (package! org-fancy-priorities :disable t) ;; they aren't pretty
+(package! org-super-agenda) ;; prettier and more functional org-agenda

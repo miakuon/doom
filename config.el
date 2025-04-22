@@ -33,8 +33,8 @@
         ;;     ("ddg" . "https://duckduckgo.com/?q=")
         ;;     ("wiki" . "https://en.wikipedia.org/wiki/"))
         ;; org-table-convert-region-max-lines 20000
-        org-todo-keywords        ; This overwrites the default Doom org-todo-keywords
-          '((sequence
+        org-todo-keywords         ; This overwrites the default Doom org-todo-keywords
+          '((sequence             ; Tasks
               "TODO(t)"           ; A task that is ready to be tackled
               "WAIT(w)"           ; Something is holding up this task
               "STRT(s)"           ; Task is started
@@ -60,7 +60,8 @@
 
 (require 'find-lisp)
 (after! org
-  (defvar org-agenda-directory (expand-file-name "Org/" org-directory) "My variable. Used for other variables in config.org")
+  (defvar org-agenda-subdirectory "Организация" "Directory in org-directory that contains all organization realted files")
+  (defvar org-agenda-directory (expand-file-name "Организация/" org-directory) "")
   (setq org-agenda-files (find-lisp-find-files org-agenda-directory "\.org$")))
 
 ;; (setq
@@ -69,6 +70,11 @@
    ;;   (?B :foreground "#98be65" :weight bold)
    ;;   (?C :foreground "#c678dd" :weight bold))
    ;; org-agenda-block-separator 8411)
+
+(use-package! org-super-agenda
+  :after org-agenda
+  :config
+  (org-super-agenda-mode))
 
 (setq org-agenda-custom-commands
       '(("v" "A better agenda view"
@@ -80,13 +86,87 @@
                  (org-agenda-overriding-header "Medium-priority unfinished tasks:")))
           (tags "PRIORITY=\"C\""
                 ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-                 (org-agenda-overriding-header "Low-priority unfinished tasks:")))
-          (tags "customtag"
-                ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-                 (org-agenda-overriding-header "Tasks marked with customtag:")))
+                 (org-agenda-overriding-header "Low-priority unfinished tasks:")))))
+        ("p" "Задачи по проектам"
+         ((alltodo ""
+                   ((org-super-agenda-groups
+                     '((:auto-group t)
+                       (:discard (:not (:tag t)))))))))
+        ("d" "Задачи по дедлайнам"
+         ((alltodo ""
+           ((org-super-agenda-groups
+             '((:name "🔴 Просроченные"
+                :and (:deadline past :todo t))
+               (:name "🟡 С дедлайном"
+                :and (:deadline future :todo t))
+               (:name "⚪ Без дедлайна"
+                :and (:not (:deadline)) :todo t)))))))
+        ("D" "Дедлайны"
+         ((alltodo ""
+                  ((org-super-agenda-groups
+                    '((:name "🔴 Просроченные"
+                       :and (:deadline past :todo t))
+                      (:name "🟡 С дедлайном"
+                       :and (:deadline future :todo t))
+                      (:name "⚪ Без дедлайна"
+                       :and (:not (:deadline)) :todo t)))
+                   (org-agenda-prefix-format "  %12(deadline) %?-20t %s")))))
+        ("g" "Get Things Done"
+         ((agenda ""
+                  ((org-agenda-skip-function
+                    '(org-agenda-skip-entry-if 'deadline))
+                   (org-deadline-warning-days 0)))
+          (todo "NEXT"
+                ((org-agenda-skip-function
+                  '(org-agenda-skip-entry-if 'deadline))
+                 (org-agenda-prefix-format "  %i %-12:c [%e] ")
+                 (org-agenda-overriding-header "\nTasks\n")))
+          (agenda nil
+                  ((org-agenda-entry-types '(:deadline))
+                   (org-agenda-format-date "")
+                   (org-deadline-warning-days 7)
+                   (org-agenda-skip-function
+                    '(org-agenda-skip-entry-if 'notregexp "\\* NEXT"))
+                   (org-agenda-overriding-header "\nDeadlines")))
+          (tags-todo "inbox"
+                     ((org-agenda-prefix-format "  %?-12t% s")
+                      (org-agenda-overriding-header "\nInbox\n")))
+          (tags "CLOSED>=\"<today>\""
+                ((org-agenda-overriding-header "\nCompleted today\n")))))))
 
-          (agenda "")
-          (alltodo "")))))
+(after! org
+ (setq org-capture-templates
+       `(("g" "GTD")
+         ("gi" "Inbox" entry  (file "Организация/Входящее.org")
+          "* TODO %?\n/Entered on/ %U" :prepend t)
+         ("gm" "Meeting" entry  (file+headline "Организация/Расписание.org" "Личное")
+          "* %? :встреча:\n<%<%Y-%m-%d %a %H:00>>\n/Entered on/ %U" :prepend t)
+         ("gc" "Current" entry (file "Организация/Текущее.org")
+          "* TODO %?\nSCHEDULED: %t\n/Entered on/ %U" :prepend t)
+         ;; ("j" "Journal")
+         ;; ("jd" "Daily" entry
+         ;;  (file+olp+datetree +org-capture-journal-file)
+         ;;  "* %U %?\n%i\n%a" :prepend t)
+         ;; ("jw" "Weekly" entry)
+         ;; ("jm" "Monthly" entry)
+         ;; ("jy" "Yearly" entry)
+         ("p" "Templates for projects")
+         ("pt" "Project-local todo" entry
+          (file+headline +org-capture-project-todo-file "Inbox")
+          "* TODO %?\n%i\n%a" :prepend t)
+         ("pn" "Project-local notes" entry
+          (file+headline +org-capture-project-notes-file "Inbox")
+          "* %U %?\n%i\n%a" :prepend t)
+         ("pc" "Project-local changelog" entry
+          (file+headline +org-capture-project-changelog-file "Unreleased")
+          "* %U %?\n%i\n%a" :prepend t)
+         ("o" "Centralized templates for projects")
+         ("ot" "Project todo" entry
+          #'+org-capture-central-project-todo-file "* TODO %?\n %i\n %a" :heading "Tasks" :prepend nil)
+         ("on" "Project notes" entry
+          #'+org-capture-central-project-notes-file "* %U %?\n %i\n %a" :heading "Notes" :prepend t)
+         ("oc" "Project changelog" entry
+          #'+org-capture-central-project-changelog-file "* %U %?\n %i\n %a" :heading "Changelog" :prepend t))))
 
 (setq org-journal-dir "~/Гримуар/Дневник/"
       org-journal-date-prefix "* "
