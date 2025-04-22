@@ -123,7 +123,7 @@
 #+title: ${title}
 #+author: %n
 #+language: %^{Язык|русский|english|français|中文}
-#+notetype: %^{Тип заметки:фундаментальная|мысль|цитата}
+#+notetype: %^{Тип заметки|фундаментальная|мысль|цитата}
 #+filetags: %^G")
            :unnarrowed t
            :empty-lines-before 1)
