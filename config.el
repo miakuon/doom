@@ -183,7 +183,7 @@
   (setq org-roam-capture-templates
         `(("c" "new chit" plain "%?\n* Ссылки"
            :target (file+head
-                    "%<%Y%m%d%H%M%S>.org"
+                    "Заметки/Входящие/%<%Y%m%d%H%M%S>.org"
                     ":PROPERTIES:
 :DATE:     %<%FT%T%z>
 :END:
@@ -194,7 +194,7 @@
            :empty-lines-before 1)
           ("f" "new fundamental" plain "%?\n* Ссылки\n** Связи\n** Источники"
            :target (file+head
-                    "%<%Y%m%d%H%M%S>-${slug}.org"
+                    "Заметки/%<%Y%m%d%H%M%S>-${slug}.org"
                     ":PROPERTIES:
 :ROAM_ALIASES: %^{Синонимы}
 :DATE:     %<%FT%T%z>
@@ -209,7 +209,7 @@
            :empty-lines-before 1)
           ("n" "new note" plain "* ${title}\n%?\n* Ссылки"
            :target (file+head
-                    "%<%Y%m%d%H%M%S>-${slug}.org"
+                    "Заметки/%<%Y%m%d%H%M%S>-${slug}.org"
                     ":PROPERTIES:
 :ROAM_ALIASES: %^{Синонимы}
 :DATE:     %<%FT%T%z>
@@ -224,7 +224,7 @@
            :empty-lines-before 1)
           ("a" "new abstract" plain "* ${title}\n%?\n* Источник\n%A\n* Ссылки\n* TODO Добавить синонимы, если нужно"
            :target (file+head
-                    "%<%Y%m%d%H%M%S>-${slug}.org"
+                    "Заметки/%<%Y%m%d%H%M%S>-${slug}.org"
                     ":PROPERTIES:
 :DATE:     %<%FT%T%z>
 :ACCESS:   %^{Доступ|public|private|personal|confidentional}
@@ -239,7 +239,7 @@
            :empty-lines-before 1)
           ("c" "new copy" plain "* Источник\n%A\n* ${title}\n%?"
            :target (file+head
-                    "%<%Y%m%d%H%M%S>-${slug}.org"
+                    "Заметки/%<%Y%m%d%H%M%S>-${slug}.org"
                     ":PROPERTIES:
 :ROAM_ALIASES: %^{Синонимы}
 :DATE:     %<%FT%T%z>
