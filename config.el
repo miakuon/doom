@@ -2,11 +2,14 @@
 ;;; Commetary: My Doom Emacs Config
 
 (setq user-full-name "Mia Kuon"
-      user-mail-address "mia.kuon@gmail.com")
+      user-mail-address "mia.kuon@gmail.com"
+      doom-user-dir "/home/mia/.config/doom")
 
+(add-to-list 'initial-frame-alist '(fullscreen . fullboth))
 (setq doom-theme 'doom-one)
 
 (setq display-line-numbers-type t)
+(show-paren-mode 1)
 
 (set-language-environment "Russian")
 (prefer-coding-system 'utf-8)
