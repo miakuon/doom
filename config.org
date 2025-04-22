@@ -588,24 +588,24 @@ drag&drop functionality
         org-roam-graph-viewer "/usr/bin/firefox") ; TODO поменять на qutebrowser
 
   (setq org-roam-capture-templates
-        `(("c" "new chit" plain "%?\n* Ссылки"
+        `(("c" "Записка, Черновик" plain "%?\n* Ссылки"
            :target (file+head
                     "Заметки/Входящие/%<%Y%m%d%H%M%S>.org"
                     ":PROPERTIES:
 :DATE:     %<%FT%T%z>
 :END:
 ,#+title: ${title}
-,#+notetype: %^{Тип заметки:записка|черновик}
+,#+notetype: %^{Тип заметки|записка|черновик}
 ,#+filetags: %^G")
            :unnarrowed t
            :empty-lines-before 1)
-          ("f" "new fundamental" plain "%?\n* Ссылки\n** Связи\n** Источники"
+          ("f" "Фундаментальная, Мысль, Цитата" plain "%?\n* Ссылки\n** Связи\n** Источники"
            :target (file+head
                     "Заметки/%<%Y%m%d%H%M%S>-${slug}.org"
                     ":PROPERTIES:
-:ROAM_ALIASES: %^{Синонимы}
 :DATE:     %<%FT%T%z>
 :ACCESS:   %^{Доступ|public|private|personal|confidentional}
+:ROAM_ALIASES: %^{Синонимы (в кавычках)}
 :END:
 ,#+title: ${title}
 ,#+author: %n
@@ -614,13 +614,13 @@ drag&drop functionality
 ,#+filetags: %^G")
            :unnarrowed t
            :empty-lines-before 1)
-          ("n" "new note" plain "* ${title}\n%?\n* Ссылки"
+          ("n" "Заметка, Статья, Руководство" plain "* ${title}\n%?\n* Ссылки"
            :target (file+head
                     "Заметки/%<%Y%m%d%H%M%S>-${slug}.org"
                     ":PROPERTIES:
-:ROAM_ALIASES: %^{Синонимы}
 :DATE:     %<%FT%T%z>
 :ACCESS:   %^{Доступ|public|private|personal|confidentional}
+:ROAM_ALIASES: %^{Синонимы (в кавычках)}
 :END:
 ,#+title: ${title}
 ,#+author: %n
@@ -629,7 +629,7 @@ drag&drop functionality
 ,#+filetags: %^G")
            :unnarrowed t
            :empty-lines-before 1)
-          ("a" "new abstract" plain "* ${title}\n%?\n* Источник\n%A\n* Ссылки\n* TODO Добавить синонимы, если нужно"
+          ("a" "Конспект" plain "* ${title}\n%?\n* Источник\n%A\n* Ссылки\n* TODO Добавить синонимы, если нужно"
            :target (file+head
                     "Заметки/%<%Y%m%d%H%M%S>-${slug}.org"
                     ":PROPERTIES:
@@ -644,20 +644,21 @@ drag&drop functionality
 ,#+filetags: %^G")
            :unnarrowed t
            :empty-lines-before 1)
-          ("c" "new copy" plain "* Источник\n%A\n* ${title}\n%?"
+          ("c" "Копия" plain "* Источник\n%A\n* ${title}\n%?"
            :target (file+head
                     "Заметки/%<%Y%m%d%H%M%S>-${slug}.org"
                     ":PROPERTIES:
-:ROAM_ALIASES: %^{Синонимы}
 :DATE:     %<%FT%T%z>
 :ACCESS:   %^{Доступ|public|private|personal|confidentional}
+:ROAM_ALIASES: %^{Синонимы (в кавычках)}
 :END:
 ,#+title: ${title}
 ,#+author: %n
 ,#+language: %^{Язык|русский|english|français|中文}
 ,#+notetype: копия
 ,#+sourcetype: %^{Тип источника|статья|видео|аудио|занятие}
-,#+filetags: %^G")))))
+,#+filetags: %^G"))
+          )))
 
 (use-package! websocket
   :after org-roam)
