@@ -97,8 +97,8 @@ I wrapped most of this block in (after! org).  Without this, my settings might b
         ;;     ("ddg" . "https://duckduckgo.com/?q=")
         ;;     ("wiki" . "https://en.wikipedia.org/wiki/"))
         ;; org-table-convert-region-max-lines 20000
-        org-todo-keywords        ; This overwrites the default Doom org-todo-keywords
-          '((sequence
+        org-todo-keywords         ; This overwrites the default Doom org-todo-keywords
+          '((sequence             ; Tasks
               "TODO(t)"           ; A task that is ready to be tackled
               "WAIT(w)"           ; Something is holding up this task
               "STRT(s)"           ; Task is started
@@ -109,13 +109,13 @@ I wrapped most of this block in (after! org).  Without this, my settings might b
               "DONE(d)"           ; Task has been completed
               "FAIL(f)"           ; Task has been failed
               "CANCELLED(c)" )    ; Task has been cancelled
-            (sequence
+            (sequence             ; States
               "[ ](T)"
               "[-](S)"
               "[?](W)"
               "|"
               "[X](D)")
-            (sequence
+            (sequence             ; Notes states
               "Написать(y)"
               "Дописать(l)"
               "Переписать(g)"
@@ -177,7 +177,6 @@ ERROR: Нет пакета ~org-auto-tangle~
 (map! :leader
       :desc "Insert auto_tangle tag" "i t" #'dt/insert-auto-tangle-tag)
 #+end_src
-
 ** Org fonts
 I have created an interactive function for each color scheme (M-x dt/org-colors-*).  These functions will set appropriate colors and font attributes for org-level fonts and the org-table font.
 

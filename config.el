@@ -45,13 +45,13 @@
               "DONE(d)"           ; Task has been completed
               "FAIL(f)"           ; Task has been failed
               "CANCELLED(c)" )    ; Task has been cancelled
-            (sequence
+            (sequence             ; States
               "[ ](T)"
               "[-](S)"
               "[?](W)"
               "|"
               "[X](D)")
-            (sequence
+            (sequence             ; Notes states
               "Написать(y)"
               "Дописать(l)"
               "Переписать(g)"
