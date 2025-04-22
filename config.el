@@ -315,6 +315,50 @@
 (after! org
   (setq +org-capture-journal-file (expand-file-name "Дневник" org-directory)))
 
+(defvar my/autocommit-timer "auto-commit-grimuar.timer" "Название auto-commit таймера")
+
+(defun my/start-autocommit ()
+  "Запустить таймер автокоммитов через systemd."
+  (interactive)
+  (let ((output (shell-command-to-string (format "systemctl --user start %s && echo 'Autocommit timer started'" my/autocommit-timer))))
+    (message "%s" (string-trim output))))
+
+(defun my/stop-autocommit ()
+  "Остановить таймер автокоммитов через systemd."
+  (interactive)
+  (let ((output (shell-command-to-string (format "systemctl --user stop %s && echo 'Autocommit timer stopped'" my/autocommit-timer))))
+    (message "%s" (string-trim output))))
+
+(defun my/toggle-autocommit ()
+  "Переключить таймер автокоммитов через systemd."
+  (interactive)
+  (let ((exit-code (call-process-shell-command
+                    (format "systemctl --user is-active --quiet %s" my/autocommit-timer))))
+    (if (eq exit-code 0)
+        (my/stop-autocommit)
+        (my/start-autocommit))))
+
+(defvar my/autocommit-service "auto-commit-grimuar.service"
+  "Имя systemd сервиса, запускающего скрипт один раз.")
+
+(defun my/run-autocommit-once ()
+  "Однократно выполнить автокоммит через systemd service."
+  (interactive)
+  (let ((output (shell-command-to-string (format "systemctl --user start %s && echo 'Гримуар auto-commit done'" my/autocommit-service))))
+    (message "%s" (string-trim output))))
+
+(map! :leader
+      (:prefix "n" ;; notes menu
+       (:prefix ("g" . "git")
+       :desc "Enable autosave"        "e" #'my/start-autocommit
+       :desc "Disable autosave"       "d" #'my/stop-autocommit
+       :desc "Toggle autosatve"       "t" #'my/toggle-autocommit
+       :desc "Save"                   "s" #'my/run-autocommit-once)))
+
+(map! :leader
+      (:prefix "t"  ;; toggle menu
+       :desc "Toggle notes autosave"  "n" #'my/toggle-autocommit))
+
 (evil-define-key 'normal peep-dired-mode-map
   (kbd "j") 'peep-dired-next-file
   (kbd "k") 'peep-dired-prev-file)

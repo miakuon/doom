@@ -734,6 +734,60 @@ Test
 (after! org
   (setq +org-capture-journal-file (expand-file-name "Дневник" org-directory)))
 #+end_src
+* Auto-commit
+Все изменения в Гримуаре автоматически коммитятся каждые 15 минут. Чтобы иметь возможность остановить этот процесс, например, для манипуляций с ветками или изменения конвенций, я добавляю следующие функции
+#+begin_src emacs-lisp :tangle yes
+(defvar my/autocommit-timer "auto-commit-grimuar.timer" "Название auto-commit таймера")
+
+(defun my/start-autocommit ()
+  "Запустить таймер автокоммитов через systemd."
+  (interactive)
+  (let ((output (shell-command-to-string (format "systemctl --user start %s && echo 'Autocommit timer started'" my/autocommit-timer))))
+    (message "%s" (string-trim output))))
+
+(defun my/stop-autocommit ()
+  "Остановить таймер автокоммитов через systemd."
+  (interactive)
+  (let ((output (shell-command-to-string (format "systemctl --user stop %s && echo 'Autocommit timer stopped'" my/autocommit-timer))))
+    (message "%s" (string-trim output))))
+
+(defun my/toggle-autocommit ()
+  "Переключить таймер автокоммитов через systemd."
+  (interactive)
+  (let ((exit-code (call-process-shell-command
+                    (format "systemctl --user is-active --quiet %s" my/autocommit-timer))))
+    (if (eq exit-code 0)
+        (my/stop-autocommit)
+        (my/start-autocommit))))
+#+end_src
+
+Однократно запустить
+#+begin_src emacs-lisp :tangle yes
+(defvar my/autocommit-service "auto-commit-grimuar.service"
+  "Имя systemd сервиса, запускающего скрипт один раз.")
+
+(defun my/run-autocommit-once ()
+  "Однократно выполнить автокоммит через systemd service."
+  (interactive)
+  (let ((output (shell-command-to-string (format "systemctl --user start %s && echo 'Гримуар auto-commit done'" my/autocommit-service))))
+    (message "%s" (string-trim output))))
+#+end_src
+
+Биндинги
+#+begin_src emacs-lisp :tangle yes
+(map! :leader
+      (:prefix "n" ;; notes menu
+       (:prefix ("g" . "git")
+       :desc "Enable autosave"        "e" #'my/start-autocommit
+       :desc "Disable autosave"       "d" #'my/stop-autocommit
+       :desc "Toggle autosatve"       "t" #'my/toggle-autocommit
+       :desc "Save"                   "s" #'my/run-autocommit-once)))
+
+(map! :leader
+      (:prefix "t"  ;; toggle menu
+       :desc "Toggle notes autosave"  "n" #'my/toggle-autocommit))
+
+#+end_src
 * Dired
 ** Keybindings Within Dired With Peep-Dired-Mode Enabled
 If peep-dired is enabled, you will get image previews as you go up/down with 'j' and 'k'
