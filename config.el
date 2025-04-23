@@ -263,13 +263,14 @@
 #+sourcetype: %^{Тип источника|статья|видео|аудио|занятие}
 #+filetags: %^G"))
           ("o" "Организация")
-          ("oa" "Приоритет" plain "* Цели\n%?\n* Проекты\n* Привычки\n* Заметки\n* Задачи"
+          ("oa" "Ценность" plain "* Цели\n%?\n* Ценности\n* Проекты\n* Привычки:PROPERTIES:\n:CATEGORY: Привычка\n:END:\n* Заметки\n* Задачи"
+
            :target (file+head
-                    "Организация/Приоритеты/${title}/area-${slug}.org"
+                    "Организация/Ценности/area-${slug}.org"
                     ":PROPERTIES:
 :DATE:         %<%FT%T%z>
 :ACCESS:       %^{Доступ|public|private|personal|confidentional}
-:CATEGORY:     %^{Category}
+:CATEGORY:     %^{Category для Agenda}
 :ROAM_ALIASES: %^{Синонимы (в кавычках)}
 :END:
 #+title: ${title}
@@ -285,7 +286,7 @@
                     ":PROPERTIES:
 :DATE:         %<%FT%T%z>
 :ACCESS:       %^{Доступ|public|private|personal|confidentional}
-:CATEGORY:     %^{Category}
+:CATEGORY:     %^{Category для Agenda}
 :ROAM_ALIASES: %^{Синонимы (в кавычках)}
 :END:
 #+title: ${title}
