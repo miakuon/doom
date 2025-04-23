@@ -202,16 +202,25 @@ I wrapped most of this block in (after! org).  Without this, my settings might b
                 ((org-agenda-overriding-header "\nCompleted today\n")))))))
 #+end_src
 ** GTD
+*** Capture templates
 #+begin_src emacs-lisp :tangle yes
 (after! org
  (setq org-capture-templates
        `(("g" "GTD")
          ("gi" "Inbox" entry  (file "Организация/Входящее.org")
-          "* TODO %?\n/Entered on/ %U" :prepend t)
+          "* TODO %?\n/Entered on/ %U" :prepend t :empty-lines-before 1)
          ("gm" "Meeting" entry  (file+headline "Организация/Расписание.org" "Личное")
-          "* %? :встреча:\n<%<%Y-%m-%d %a %H:00>>\n/Entered on/ %U" :prepend t)
+          "* %? %^G\nSCHEDULED: %^T\n/Entered on/ %U" :prepend t)
          ("gc" "Current" entry (file "Организация/Текущее.org")
           "* TODO %?\nSCHEDULED: %t\n/Entered on/ %U" :prepend t)
+         ("gh" "Habbit" entry (function (lambda () (read-file-name "Ценность: "
+                                              "~/Гримуар/Организация/Ценности/" nil t nil
+                                              (lambda (f)
+                                                (and (file-regular-p f)
+                                                     (string-match "\\.org$" f))))))
+          "* HBBT %?\nSCHEDULED: <%<%Y-%m-%d %a %H:00> +1d>\n:PROPERTIES:\n:STYLE:           Habbit\n:REPEAT_TO_STATE: HBBT\n:END:\n/Entered on/ %U"
+          :heading "Привычки"
+          :prepend nil)
          ;; ("j" "Journal")
          ;; ("jd" "Daily" entry
          ;;  (file+olp+datetree +org-capture-journal-file)
@@ -236,6 +245,11 @@ I wrapped most of this block in (after! org).  Without this, my settings might b
           #'+org-capture-central-project-notes-file "* %U %?\n %i\n %a" :heading "Notes" :prepend t)
          ("oc" "Project changelog" entry
           #'+org-capture-central-project-changelog-file "* %U %?\n %i\n %a" :heading "Changelog" :prepend t))))
+#+end_src
+*** Other
+#+begin_src emacs-lisp :tangle yes
+(after! org
+  (setq org-log-into-drawer t))
 #+end_src
 ** Org-auto-tangle
 =org-auto-tangle= allows you to add the option =#+auto_tangle: t= in your Org file so that it automatically tangles when you save the document.  I have made adding this to your file even easier by creating a function 'dt/insert-auto-tangle-tag' and setting it to a keybinding 'SPC i a'.

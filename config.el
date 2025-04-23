@@ -138,11 +138,19 @@
  (setq org-capture-templates
        `(("g" "GTD")
          ("gi" "Inbox" entry  (file "Организация/Входящее.org")
-          "* TODO %?\n/Entered on/ %U" :prepend t)
+          "* TODO %?\n/Entered on/ %U" :prepend t :empty-lines-before 1)
          ("gm" "Meeting" entry  (file+headline "Организация/Расписание.org" "Личное")
-          "* %? :встреча:\n<%<%Y-%m-%d %a %H:00>>\n/Entered on/ %U" :prepend t)
+          "* %? %^G\nSCHEDULED: %^T\n/Entered on/ %U" :prepend t)
          ("gc" "Current" entry (file "Организация/Текущее.org")
           "* TODO %?\nSCHEDULED: %t\n/Entered on/ %U" :prepend t)
+         ("gh" "Habbit" entry (function (lambda () (read-file-name "Ценность: "
+                                              "~/Гримуар/Организация/Ценности/" nil t nil
+                                              (lambda (f)
+                                                (and (file-regular-p f)
+                                                     (string-match "\\.org$" f))))))
+          "* HBBT %?\nSCHEDULED: <%<%Y-%m-%d %a %H:00> +1d>\n:PROPERTIES:\n:STYLE:           Habbit\n:REPEAT_TO_STATE: HBBT\n:END:\n/Entered on/ %U"
+          :heading "Привычки"
+          :prepend nil)
          ;; ("j" "Journal")
          ;; ("jd" "Daily" entry
          ;;  (file+olp+datetree +org-capture-journal-file)
@@ -167,6 +175,9 @@
           #'+org-capture-central-project-notes-file "* %U %?\n %i\n %a" :heading "Notes" :prepend t)
          ("oc" "Project changelog" entry
           #'+org-capture-central-project-changelog-file "* %U %?\n %i\n %a" :heading "Changelog" :prepend t))))
+
+(after! org
+  (setq org-log-into-drawer t))
 
 (setq org-journal-dir "~/Гримуар/Дневник/"
       org-journal-date-prefix "* "
