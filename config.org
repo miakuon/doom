@@ -82,7 +82,7 @@ I wrapped most of this block in (after! org).  Without this, my settings might b
 ;      :desc "Org babel tangle" "m B" #'org-babel-tangle)
 (after! org
   (setq org-directory "~/Гримуар/"
-        org-default-notes-file (expand-file-name "Входящие/Заметки.org" org-directory)
+        org-default-notes-file (expand-file-name "Организация/Входящее.org" org-directory)
         org-id-locations-file (expand-file-name ".orgids" org-directory)
         ;; org-ellipsis " ▼ " ; changes outline, default is "[...]"
         ;; org-superstar-headline-bullets-list '("◉" "●" "○" "◆" "●" "○" "◆")
@@ -91,11 +91,19 @@ I wrapped most of this block in (after! org).  Without this, my settings might b
         org-hide-emphasis-markers t
         ;; ex. of org-link-abbrev-alist in action
         ;; [[arch-wiki:Name_of_Page][Description]]
-        ;; org-link-abbrev-alist    ; This overwrites the default Doom org-link-abbrev-list
-        ;;   '(("google" . "http://www.google.com/search?q=")
-        ;;     ("arch-wiki" . "https://wiki.archlinux.org/index.php/")
-        ;;     ("ddg" . "https://duckduckgo.com/?q=")
-        ;;     ("wiki" . "https://en.wikipedia.org/wiki/"))
+        org-link-abbrev-alist    ; This overwrites the default Doom org-link-abbrev-list
+          '(("google" . "http://www.google.com/search?q=")
+            ("archwiki" . "https://wiki.archlinux.org/index.php/")
+            ("doomdir" . "/home/mia/.config/doom/%s")
+            ("emacsdir" . "/home/mia/.config/emacs/%s")
+            ("doom-repo" . "https://github.com/doomemacs/doomemacs/%s")
+            ("wolfram" . "https://wolframalpha.com/input/?i=%s")
+            ("wikipedia" . "https://en.wikipedia.org/wiki/%s")
+            ("duckduckgo" . "https://duckduckgo.com/?q=%s")
+            ("gmap" . "https://maps.google.com/maps?q=%s")
+            ("gimages" . "https://google.com/images?q=%s")
+            ("youtube" . "https://youtube.com/watch?v=%s")
+            ("github" . "https://github.com/%s"))
         ;; org-table-convert-region-max-lines 20000
         org-todo-keywords         ; This overwrites the default Doom org-todo-keywords
           '((sequence             ; Tasks
@@ -125,11 +133,21 @@ I wrapped most of this block in (after! org).  Without this, my settings might b
 
 ** TODO Org-agenda
 #+begin_src emacs-lisp
-(require 'find-lisp)
 (after! org
-  (defvar org-agenda-subdirectory "Организация" "Directory in org-directory that contains all organization realted files")
-  (defvar org-agenda-directory (expand-file-name "Организация/" org-directory) "")
-  (setq org-agenda-files (find-lisp-find-files org-agenda-directory "\.org$")))
+  ;; (defvar org-agenda-subdirectory "Организация" "Directory in org-directory that contains all organization realted files")
+  ;; (defvar org-agenda-directory (expand-file-name "Организация/" org-directory) "Directory with Org Agenda files")
+  ;; (setq org-agenda-files (directory-files-recursively org-agenda-directory "\.org$"))
+  (setq org-agenda-files
+        (append
+         (directory-files-recursively "~/Гримуар/Организация/Проекты" "\\.org$")
+         '("~/Гримуар/Организация"
+           "~/Гримуар/Организация/Ценности"
+           "~/Гримуар/Организация/Планы"
+           "~/Гримуар/Люди"
+           "~/Гримуар/Заметки"
+           "~/Гримуар/Дневник")))
+  (setq org-agenda-file-regexp "\\.org\\'")
+  (setq org-agenda-start-day "-1d"))
 
 ;; (setq
    ;; org-priority-faces
@@ -287,7 +305,8 @@ I wrapped most of this block in (after! org).  Without this, my settings might b
 *** Other
 #+begin_src emacs-lisp :tangle yes
 (after! org
-  (setq org-log-into-drawer t))
+  (setq org-log-into-drawer t)
+  (setq org-log-reschedule 'time))
 #+end_src
 ** Org-auto-tangle
 =org-auto-tangle= allows you to add the option =#+auto_tangle: t= in your Org file so that it automatically tangles when you save the document.  I have made adding this to your file even easier by creating a function 'dt/insert-auto-tangle-tag' and setting it to a keybinding 'SPC i a'.
