@@ -199,28 +199,66 @@ I wrapped most of this block in (after! org).  Without this, my settings might b
                      ((org-agenda-prefix-format "  %?-12t% s")
                       (org-agenda-overriding-header "\nInbox\n")))
           (tags "CLOSED>=\"<today>\""
-                ((org-agenda-overriding-header "\nCompleted today\n")))))))
+                ((org-agenda-overriding-header "\nCompleted today\n")))))
+        ("d" "Daily View"
+         ((agenda ""                             ; Агенда на сегодня
+                  ((org-agenda-span 'day)
+                   (org-agenda-start-day nil)
+                   (org-agenda-overriding-header "Сегодня")))
+          (tags "*"                            ; Все задачи из Входящее.org
+                   ((org-agenda-files '("~/Гримуар/Организация/Входящее.org"))
+                    (org-agenda-overriding-header "Входящие")))
+          (search "CLOSED>=\"<today>\""          ; Сделано сегодня
+                  ((org-agenda-overriding-header "\nСделано сегодня\n")))))))
 #+end_src
 ** GTD
 *** Capture templates
 #+begin_src emacs-lisp :tangle yes
+(defun my/org-capture-area-file ()
+  "Prompt for an area-file"
+  (read-file-name "Ценность: "
+                  "~/Гримуар/Организация/Ценности/"
+                  nil t nil
+                  (lambda (f)
+                    (and (file-regular-p f)
+                         (string-match "area-.*\\.org\\'" f)))))
+
+(defun my/org-capture-project-or-area-file ()
+  "Prompt for an area- or proj-file"
+   (completing-read
+    "Выберите файл: "
+    (mapcar (lambda (f) (file-relative-name f org-directory))
+            (append
+             (file-expand-wildcards (concat org-directory "Организация/Ценности/area-*.org"))
+             (file-expand-wildcards (concat org-directory "Организация/Проекты/*/proj-*.org"))))))
+
 (after! org
  (setq org-capture-templates
        `(("g" "GTD")
          ("gi" "Inbox" entry  (file "Организация/Входящее.org")
-          "* TODO %?\n/Entered on/ %U" :prepend t :empty-lines-before 1)
+          "* TODO %?\n:PROPERTIES:\n:ENTERED_ON: %U\n:END:"
+          :prepend t :empty-lines-before 1)
          ("gm" "Meeting" entry  (file+headline "Организация/Расписание.org" "Личное")
-          "* %? %^G\nSCHEDULED: %^T\n/Entered on/ %U" :prepend t)
+          "* %? %^G\nSCHEDULED: %^T\n:PROPERTIES:\n:ENTERED_ON: %U\n:END:"
+          :prepend t)
          ("gc" "Current" entry (file "Организация/Текущее.org")
-          "* TODO %?\nSCHEDULED: %t\n/Entered on/ %U" :prepend t)
-         ("gh" "Habbit" entry (function (lambda () (read-file-name "Ценность: "
-                                              "~/Гримуар/Организация/Ценности/" nil t nil
-                                              (lambda (f)
-                                                (and (file-regular-p f)
-                                                     (string-match "\\.org$" f))))))
-          "* HBBT %?\nSCHEDULED: <%<%Y-%m-%d %a %H:00> +1d>\n:PROPERTIES:\n:STYLE:           Habbit\n:REPEAT_TO_STATE: HBBT\n:END:\n/Entered on/ %U"
-          :heading "Привычки"
-          :prepend nil)
+          "* TODO %?\nSCHEDULED: %t\n:PROPERTIES:\n:ENTERED_ON: %U\n:END:"
+          :prepend t :empty-lines-before 1)
+         ("gh" "Habbit" entry (file+headline my/org-capture-area-file "Привычки")
+          "* HBBT %?\nSCHEDULED: <%<%Y-%m-%d %a %H:00> +1d>\n:PROPERTIES:\n:STYLE:           Habbit\n:REPEAT_TO_STATE: HBBT\n:END:\n:PROPERTIES:\n:ENTERED_ON: %U\n:END:"
+          :prepend t)
+         ("gt" "TODO" entry (file+headline my/org-capture-project-or-area-file "Задачи")
+          "* TODO %? %^G\nDEADLINE: %^{Deadline}t SCHEDULED: %^{Scheduled}T\n:PROPERTIES:\n:ENTERED_ON: %U\n:END:"
+          :prepend t)
+         ("gn" "Link current note" item (file+headline my/org-capture-project-or-area-file "Заметки")
+          "- %A%?"
+          :prepend nil :unnarrowed t)
+         ("gp" "Link current project" item (file+headline my/org-capture-project-or-area-file "Проекты")
+          "- %A%?"
+          :prepend nil :unnarrowed t)
+         ("ga" "Link current area" item (file+headline my/org-capture-area-file "Ценности")
+          "- %A%?"
+          :prepend nil :unnarrowed t)
          ;; ("j" "Journal")
          ;; ("jd" "Daily" entry
          ;;  (file+olp+datetree +org-capture-journal-file)
@@ -584,7 +622,7 @@ drag&drop functionality
 #+begin_src emacs-lisp :tangle yes
 (setq org-download-image-dir "~/Гримуар/Вложения/")
 #+end_src
-** TODO Org-roam
+** Org-roam
 [[https://github.com/org-roam/org-roam][Org-roam]] is a plain-text knowledge management system.  Org-roam borrows principles from the =Zettelkasten= method, providing a solution for non-hierarchical note-taking.  It should also work as a plug-and-play solution for anyone already using Org-mode for their personal wiki.
 
 | COMMAND                | DESCRIPTION                        | KEYBINDING |
@@ -596,131 +634,12 @@ drag&drop functionality
 | org-roam-capture       | /Capture to node/                    | SPC n r n  |
 | org-roam-buffer-toggle | /Toggle roam buffer/                 | SPC n r r  |
 
-#+begin_src emacs-lisp
+*** Variables
+#+begin_src emacs-lisp :tangle yes
 (after! org
   (setq org-roam-directory org-directory
-        org-roam-graph-viewer "/usr/bin/firefox") ; TODO поменять на qutebrowser
-
-  (setq org-roam-capture-templates
-        `(("c" "Записка, Черновик" plain "%?\n* Ссылки"
-           :target (file+head
-                    "Заметки/Входящие/%<%Y%m%d%H%M%S>.org"
-                    ":PROPERTIES:
-:DATE:     %<%FT%T%z>
-:END:
-,#+title: ${title}
-,#+notetype: %^{Тип заметки|записка|черновик}
-,#+filetags: %^G")
-           :unnarrowed t
-           :empty-lines-before 1)
-          ("f" "Фундаментальная, Мысль, Цитата" plain "%?\n* Ссылки\n** Связи\n** Источники"
-           :target (file+head
-                    "Заметки/%<%Y%m%d%H%M%S>-${slug}.org"
-                    ":PROPERTIES:
-:DATE:     %<%FT%T%z>
-:ACCESS:   %^{Доступ|public|private|personal|confidentional}
-:ROAM_ALIASES: %^{Синонимы (в кавычках)}
-:END:
-,#+title: ${title}
-,#+author: %n
-,#+language: %^{Язык|русский|english|français|中文}
-,#+notetype: %^{Тип заметки|фундаментальная|мысль|цитата}
-,#+filetags: %^G")
-           :unnarrowed t
-           :empty-lines-before 1)
-          ("n" "Заметка, Статья, Руководство" plain "* ${title}\n%?\n* Ссылки"
-           :target (file+head
-                    "Заметки/%<%Y%m%d%H%M%S>-${slug}.org"
-                    ":PROPERTIES:
-:DATE:     %<%FT%T%z>
-:ACCESS:   %^{Доступ|public|private|personal|confidentional}
-:ROAM_ALIASES: %^{Синонимы (в кавычках)}
-:END:
-,#+title: ${title}
-,#+author: %n
-,#+language: %^{Язык|русский|english|français|中文}
-,#+notetype: %^{Тип заметки|заметка|статья|руководство}
-,#+filetags: %^G")
-           :unnarrowed t
-           :empty-lines-before 1)
-          ("a" "Конспект" plain "* ${title}\n%?\n* Источник\n%A\n* Ссылки\n* TODO Добавить синонимы, если нужно"
-           :target (file+head
-                    "Заметки/%<%Y%m%d%H%M%S>-${slug}.org"
-                    ":PROPERTIES:
-:DATE:     %<%FT%T%z>
-:ACCESS:   %^{Доступ|public|private|personal|confidentional}
-:END:
-,#+title: ${title}
-,#+author: %n
-,#+language: %^{Язык|русский|english|français|中文}
-,#+notetype: коспект
-,#+sourcetype: %^{Тип источника|статья|видео|аудио|занятие}
-,#+filetags: %^G")
-           :unnarrowed t
-           :empty-lines-before 1)
-          ("c" "Копия" plain "* Источник\n%A\n* ${title}\n%?"
-           :target (file+head
-                    "Заметки/%<%Y%m%d%H%M%S>-${slug}.org"
-                    ":PROPERTIES:
-:DATE:     %<%FT%T%z>
-:ACCESS:   %^{Доступ|public|private|personal|confidentional}
-:ROAM_ALIASES: %^{Синонимы (в кавычках)}
-:END:
-,#+title: ${title}
-,#+author: %n
-,#+language: %^{Язык|русский|english|français|中文}
-,#+notetype: копия
-,#+sourcetype: %^{Тип источника|статья|видео|аудио|занятие}
-,#+filetags: %^G"))
-          ("o" "Организация")
-          ("oa" "Ценность" plain "* Цели\n%?\n* Ценности\n* Проекты\n* Привычки:PROPERTIES:\n:CATEGORY: Привычка\n:END:\n* Заметки\n* Задачи"
-
-           :target (file+head
-                    "Организация/Ценности/area-${slug}.org"
-                    ":PROPERTIES:
-:DATE:         %<%FT%T%z>
-:ACCESS:       %^{Доступ|public|private|personal|confidentional}
-:CATEGORY:     %^{Category для Agenda}
-:ROAM_ALIASES: %^{Синонимы (в кавычках)}
-:END:
-,#+title: ${title}
-,#+author: %n
-,#+language: %^{Язык|русский|english|français|中文}
-,#+notetype: организация
-,#+filetags: :${title}:%^G")
-           :unnarrowed t
-           :empty-lines-before 1)
-          ("op" "Проект" plain "* Цели\n%?\n* Заметки\n* Проекты\n* Задачи"
-           :target (file+head
-                    "Организация/Проекты/${title}/proj-${slug}.org"
-                    ":PROPERTIES:
-:DATE:         %<%FT%T%z>
-:ACCESS:       %^{Доступ|public|private|personal|confidentional}
-:CATEGORY:     %^{Category для Agenda}
-:ROAM_ALIASES: %^{Синонимы (в кавычках)}
-:END:
-,#+title: ${title}
-,#+author: %n
-,#+language: %^{Язык|русский|english|français|中文}
-,#+notetype: организация
-,#+filetags: :${title}:%^G")
-           :unnarrowed t
-           :empty-lines-before 1)
-          ("or" "План" plain "* Цели\n%?\n* Заметки\n* Проекты"
-           :target (file+head
-                    "Организация/Планирование/plan-${slug}.org"
-                    ":PROPERTIES:
-:DATE:         %<%FT%T%z>
-:ACCESS:       %^{Доступ|public|private|personal|confidentional}
-:ROAM_ALIASES: %^{Синонимы (в кавычках)}
-:END:
-,#+title: ${title}
-,#+author: %n
-,#+language: %^{Язык|русский|english|français|中文}
-,#+notetype: организация
-,#+filetags: :${title}:%^G")
-           :unnarrowed t
-           :empty-lines-before 1))))
+        org-roam-graph-viewer "/usr/bin/firefox"  ; TODO поменять на qutebrowser
+        +org-roam-auto-backlinks-buffer t))
 
 (use-package! websocket
   :after org-roam)
@@ -743,7 +662,183 @@ drag&drop functionality
 ;;        :desc "Capture to node"     "n" #'org-roam-capture
 ;;        :desc "Toggle roam buffer"  "r" #'org-roam-buffer-toggle))
 #+end_src
-** TODO Org-roam-capture-templates tangle
+*** Org-roam-capture
+#+begin_src emacs-lisp :tangle yes
+(after! org
+  (setq org-roam-capture-templates
+        `(("c" "Записка, Черновик" plain "%?\n* Ссылки"
+           :target (file+head
+                    "Заметки/Входящие/%<%Y%m%d%H%M%S>.org"
+                    ":PROPERTIES:
+:DATE:     %U
+:END:
+,#+title: ${title}
+,#+notetype: %^{Тип заметки|записка|черновик}
+,#+filetags: %^G")
+           :unnarrowed t
+           :empty-lines-before 1)
+          ("f" "Фундаментальная, Мысль, Цитата" plain "%?\n* Ссылки\n** Связи\n** Источники"
+           :target (file+head
+                    "Заметки/%<%Y%m%d%H%M%S>-${slug}.org"
+                    ":PROPERTIES:
+:DATE:     %U
+:ACCESS:   %^{Доступ|public|private|personal|confidentional}
+:ROAM_ALIASES: %^{Синонимы (в кавычках)}
+:END:
+,#+title: ${title}
+,#+author: %n
+,#+language: %^{Язык|русский|english|français|中文}
+,#+notetype: %^{Тип заметки|фундаментальная|мысль|цитата}
+,#+filetags: %^G")
+           :unnarrowed t
+           :empty-lines-before 1)
+          ("n" "Заметка, Статья, Руководство" plain "* ${title}\n%?\n* Ссылки"
+           :target (file+head
+                    "Заметки/%<%Y%m%d%H%M%S>-${slug}.org"
+                    ":PROPERTIES:
+:DATE:     %U
+:ACCESS:   %^{Доступ|public|private|personal|confidentional}
+:ROAM_ALIASES: %^{Синонимы (в кавычках)}
+:END:
+,#+title: ${title}
+,#+author: %n
+,#+language: русский
+,#+notetype: %^{Тип заметки|заметка|статья|руководство}
+,#+filetags: %^G")
+           :unnarrowed t
+           :empty-lines-before 1)
+          ("a" "Конспект" plain "* ${title}\n%?\n* Источник\n%A\n* Ссылки\n* TODO Добавить синонимы, если нужно"
+           :target (file+head
+                    "Заметки/%<%Y%m%d%H%M%S>-${slug}.org"
+                    ":PROPERTIES:
+:DATE:     %U
+:ACCESS:   %^{Доступ|public|private|personal|confidentional}
+:END:
+,#+title: ${title}
+,#+author: %n
+,#+language: %^{Язык|русский|english|français|中文}
+,#+notetype: коспект
+,#+sourcetype: %^{Тип источника|статья|видео|аудио|занятие}
+,#+filetags: %^G")
+           :unnarrowed t
+           :empty-lines-before 1)
+          ("x" "Копия" plain "* Источник\n%A\n* ${title}\n%?"
+           :target (file+head
+                    "Заметки/%<%Y%m%d%H%M%S>-${slug}.org"
+                    ":PROPERTIES:
+:DATE:     %U
+:ACCESS:   %^{Доступ|public|private|personal|confidentional}
+:ROAM_ALIASES: %^{Синонимы (в кавычках)}
+:END:
+,#+title: ${title}
+,#+author: %n
+,#+language: %^{Язык|русский|english|français|中文}
+,#+notetype: копия
+,#+sourcetype: %^{Тип источника|статья|видео|аудио|занятие}
+,#+filetags: %^G"))
+          ("o" "Организация")
+          ("oa" "Ценность" plain
+           "* Цели
+%?
+,* Ценности
+,* Проекты
+,* Привычки
+:PROPERTIES:
+:CATEGORY: Привычка
+:VISIBILITY: content
+:END:
+,* Заметки
+,* Задачи
+:PROPERTIES:
+:VISIBILITY: content
+:END:"
+
+           :target (file+head
+                    "Организация/Ценности/area-${slug}.org"
+                    ":PROPERTIES:
+:DATE:         %U
+:ACCESS:       %^{Доступ|public|private|personal|confidentional}
+:CATEGORY:     %^{Category для Agenda}
+:ROAM_ALIASES: %^{Синонимы (в кавычках)}
+:END:
+,#+title: ${title}
+,#+author: %n
+,#+language: русский
+,#+notetype: организация
+,#+filetags: :${slug}:%^G")
+           :unnarrowed t
+           :empty-lines-before 1)
+          ("op" "Проект" plain
+           "* Цели
+%?
+,* Заметки
+,* Проекты
+,* Задачи
+:PROPERTIES:
+:VISIBILITY: content
+:END:"
+           :target (file+head
+                    "Организация/Проекты/${title}/proj-${slug}.org"
+                    ":PROPERTIES:
+:DATE:         %U
+:ACCESS:       %^{Доступ|public|private|personal|confidentional}
+:CATEGORY:     %^{Category для Agenda}
+:ROAM_ALIASES: %^{Синонимы (в кавычках)}
+:END:
+,#+title: ${title}
+,#+author: %n
+,#+language: русский
+,#+notetype: организация
+,#+filetags: :${slug}:%^G")
+           :unnarrowed t
+           :empty-lines-before 1)
+          ("or" "План" plain "* Цели\n%?\n* План\n* Заметки\n* Проекты"
+           :target (file+head
+                    "Организация/Планирование/plan-${slug}.org"
+                    ":PROPERTIES:
+:DATE:         %U
+:ACCESS:       %^{Доступ|public|private|personal|confidentional}
+:ROAM_ALIASES: %^{Синонимы (в кавычках)}
+:END:
+,#+title: ${title}
+,#+author: %n
+,#+language: русский
+,#+notetype: организация
+,#+filetags: :${slug}:%^G")
+           :unnarrowed t
+           :empty-lines-before 1)
+          ("p" "Person" plain "%?"
+           :target (file+head
+                    "Люди/person-${slug}.org"
+                    ":PROPERTIES:
+:DATE:         %U
+:ACCESS:       %^{Доступ|public|private|personal|confidentional}
+:ROAM_ALIASES: %^{Синонимы (в кавычках)}
+:END:
+,#+title: ${title}
+,#+author: %n
+,#+language: русский
+,#+notetype: человек
+,#+filetags:
+
+,* ${title}
+:PROPERTIES:
+:ALIAS: %\\2
+:EMAIL: %^{Email}
+:PHONE: %^{Phone|+7}
+:ADDRESS: %^{Address}
+:BIRTHDAY: %^{Birtday}
+:NICKNAME: %^{IRC nickname}
+:END:
+,** Заметки
+,** Проекты
+,** Задачи
+:PROPERTIES:
+:VISIBILITY: content
+:END:")
+           :unnarrowed t))))
+#+end_src
+**** TODO Org-roam-capture-templates tangle
 #+begin_src emacs-lisp :tangle yes
 (defun extract-org-roam-templates ()
   "Extract org-roam-capture-templates from config.org and save to org-roam-templates.el"
@@ -788,14 +883,54 @@ Test
 (message "Current after-save-hook: %s" after-save-hook)
 #+end_src
 ** TODO Org-brain
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle no
 (after! org
   (setq org-brain-path org-directory))
 #+end_src
-** Journal
+** TODO Journal
 #+begin_src emacs-lisp :tangle yes
 (after! org
   (setq +org-capture-journal-file (expand-file-name "Дневник" org-directory)))
+#+end_src
+** TODO Contacts
+#+begin_src emacs-lisp :tangle yes
+(after! org
+  (defvar org-contacts-directory (expand-file-name "Люди/" org-directory) "Directory with Org Contacts files")
+  (setq org-contacts-files (directory-files-recursively org-contacts-directory "\.org$")))
+#+end_src
+** TODO Input Method
+#+begin_src emacs-lisp :tangle no
+(defun my/org-set-input-method-from-language ()
+  "Set input method in org-mode according to #+LANGUAGE value."
+  (when (derived-mode-p 'org-mode)
+    (save-excursion
+      (goto-char (point-min))
+      (when (re-search-forward "^#\\+language: +\\(\\w+\\)" nil t)
+        (let* ((lang (match-string 1))
+               (input-method
+                (pcase (downcase lang)
+                  ("russian" "russian-computer")
+                  ("english" nil)
+                  ;; Добавь другие языки при необходимости
+                  )))
+          (when input-method
+            (set-input-method input-method)))))))
+
+(add-hook 'org-mode-hook #'my/org-set-input-method-from-language)
+
+#+end_src
+** TODO LaTeX
+#+begin_src emacs-lisp :tangle yes
+(setq org-startup-with-latex-preview t)
+#+end_src
+* Babel
+#+begin_src emacs-lisp :tangle yes
+(after! ob-plantuml
+  (setq plantuml-jar-path nil)
+  (setq org-plantuml-jar-path plantuml-jar-path)
+  (setq plantuml-exec-mode 'executable)
+  (setq org-plantuml-exec-mode plantuml-exec-mode))
+
 #+end_src
 * Auto-commit
 Все изменения в Гримуаре автоматически коммитятся каждые 15 минут. Чтобы иметь возможность остановить этот процесс, например, для манипуляций с ветками или изменения конвенций, я добавляю следующие функции

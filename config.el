@@ -263,7 +263,7 @@
 #+sourcetype: %^{Тип источника|статья|видео|аудио|занятие}
 #+filetags: %^G"))
           ("o" "Организация")
-          ("oa" "Ценность" plain "* Цели\n%?\n* Ценности\n* Проекты\n* Привычки:PROPERTIES:\n:CATEGORY: Привычка\n:END:\n* Заметки\n* Задачи"
+          ("oa" "Ценность" plain "* Цели\n%?\n* Ценности\n* Проекты\n* Привычки\n:PROPERTIES:\n:CATEGORY: Привычка\n:END:\n* Заметки\n* Задачи"
 
            :target (file+head
                     "Организация/Ценности/area-${slug}.org"
@@ -277,7 +277,7 @@
 #+author: %n
 #+language: %^{Язык|русский|english|français|中文}
 #+notetype: организация
-#+filetags: :${title}:%^G")
+#+filetags: :${slug}:%^G")
            :unnarrowed t
            :empty-lines-before 1)
           ("op" "Проект" plain "* Цели\n%?\n* Заметки\n* Проекты\n* Задачи"
@@ -293,7 +293,7 @@
 #+author: %n
 #+language: %^{Язык|русский|english|français|中文}
 #+notetype: организация
-#+filetags: :${title}:%^G")
+#+filetags: :${slug}:%^G")
            :unnarrowed t
            :empty-lines-before 1)
           ("or" "План" plain "* Цели\n%?\n* Заметки\n* Проекты"
@@ -308,7 +308,7 @@
 #+author: %n
 #+language: %^{Язык|русский|english|français|中文}
 #+notetype: организация
-#+filetags: :${title}:%^G")
+#+filetags: :${slug}:%^G")
            :unnarrowed t
            :empty-lines-before 1))))
 
