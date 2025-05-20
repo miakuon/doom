@@ -294,6 +294,18 @@ I wrapped most of this block in (after! org).  Without this, my settings might b
          ("pc" "Project-local changelog" entry
           (file+headline +org-capture-project-changelog-file "Unreleased")
           "* %U %?\n%i\n%a" :prepend t)
+         ("pj" "Job Application" entry (file "Организация/Проекты/Трудоустройство/список-отклики_на_вакансии.org")
+          "* TODO %? в %^{Компания}
+DEADLINE: %^{Дедлайн вакансии}t SCHEDULED: %^{Проверить статус}t
+:PROPERTIES:
+:DATE_APPLIED: %t
+:POSITION: %^{Позиция}
+:SOURCE: %^{Источник вакансии|hh.ru|LinkedIn|website|Telegram}
+:CONTACT: %^{Контакт}
+:STATUS: %^{Статус|В ожидании отклика|Жду ответа|Отказ}
+:LOCATION: %^{Локация|Москва|Удалённо}
+:END:
+- [ ] " :prepend t :empty-lines-before 1)
          ("o" "Centralized templates for projects")
          ("ot" "Project todo" entry
           #'+org-capture-central-project-todo-file "* TODO %?\n %i\n %a" :heading "Tasks" :prepend nil)
