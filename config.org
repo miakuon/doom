@@ -689,9 +689,10 @@ drag&drop functionality
            :target (file+head
                     "Заметки/Входящие/%<%Y%m%d%H%M%S>.org"
                     ":PROPERTIES:
-:DATE:     %U
+:CDATE:     %U
 :END:
 ,#+title: ${title}
+,#+date: %U
 ,#+notetype: %^{Тип заметки|записка|черновик}
 ,#+filetags: %^G")
            :unnarrowed t
@@ -700,12 +701,13 @@ drag&drop functionality
            :target (file+head
                     "Заметки/%<%Y%m%d%H%M%S>-${slug}.org"
                     ":PROPERTIES:
-:DATE:     %U
+:CDATE:     %U
 :ACCESS:   %^{Доступ|public|private|personal|confidentional}
 :ROAM_ALIASES: %^{Синонимы (в кавычках)}
 :END:
 ,#+title: ${title}
 ,#+author: %n
+,#+date: %U
 ,#+language: %^{Язык|русский|english|français|中文}
 ,#+notetype: %^{Тип заметки|фундаментальная|мысль|цитата}
 ,#+filetags: %^G")
@@ -715,12 +717,13 @@ drag&drop functionality
            :target (file+head
                     "Заметки/%<%Y%m%d%H%M%S>-${slug}.org"
                     ":PROPERTIES:
-:DATE:     %U
+:CDATE:     %U
 :ACCESS:   %^{Доступ|public|private|personal|confidentional}
 :ROAM_ALIASES: %^{Синонимы (в кавычках)}
 :END:
 ,#+title: ${title}
 ,#+author: %n
+,#+date: %U
 ,#+language: русский
 ,#+notetype: %^{Тип заметки|заметка|статья|руководство}
 ,#+filetags: %^G")
@@ -730,11 +733,12 @@ drag&drop functionality
            :target (file+head
                     "Заметки/%<%Y%m%d%H%M%S>-${slug}.org"
                     ":PROPERTIES:
-:DATE:     %U
+:CDATE:     %U
 :ACCESS:   %^{Доступ|public|private|personal|confidentional}
 :END:
 ,#+title: ${title}
 ,#+author: %n
+,#+date: %U
 ,#+language: %^{Язык|русский|english|français|中文}
 ,#+notetype: коспект
 ,#+sourcetype: %^{Тип источника|статья|видео|аудио|занятие}
@@ -745,12 +749,13 @@ drag&drop functionality
            :target (file+head
                     "Заметки/%<%Y%m%d%H%M%S>-${slug}.org"
                     ":PROPERTIES:
-:DATE:     %U
+:CDATE:     %U
 :ACCESS:   %^{Доступ|public|private|personal|confidentional}
 :ROAM_ALIASES: %^{Синонимы (в кавычках)}
 :END:
 ,#+title: ${title}
 ,#+author: %n
+,#+date: %U
 ,#+language: %^{Язык|русский|english|français|中文}
 ,#+notetype: копия
 ,#+sourcetype: %^{Тип источника|статья|видео|аудио|занятие}
@@ -775,13 +780,14 @@ drag&drop functionality
            :target (file+head
                     "Организация/Ценности/area-${slug}.org"
                     ":PROPERTIES:
-:DATE:         %U
+:CDATE:         %U
 :ACCESS:       %^{Доступ|public|private|personal|confidentional}
 :CATEGORY:     %^{Category для Agenda}
 :ROAM_ALIASES: %^{Синонимы (в кавычках)}
 :END:
 ,#+title: ${title}
 ,#+author: %n
+,#+date: %U
 ,#+language: русский
 ,#+notetype: организация
 ,#+filetags: :${slug}:%^G")
@@ -799,13 +805,14 @@ drag&drop functionality
            :target (file+head
                     "Организация/Проекты/${title}/proj-${slug}.org"
                     ":PROPERTIES:
-:DATE:         %U
+:CDATE:         %U
 :ACCESS:       %^{Доступ|public|private|personal|confidentional}
 :CATEGORY:     %^{Category для Agenda}
 :ROAM_ALIASES: %^{Синонимы (в кавычках)}
 :END:
 ,#+title: ${title}
 ,#+author: %n
+,#+date: %U
 ,#+language: русский
 ,#+notetype: организация
 ,#+filetags: :${slug}:%^G")
@@ -815,12 +822,13 @@ drag&drop functionality
            :target (file+head
                     "Организация/Планирование/plan-${slug}.org"
                     ":PROPERTIES:
-:DATE:         %U
+:CDATE:         %U
 :ACCESS:       %^{Доступ|public|private|personal|confidentional}
 :ROAM_ALIASES: %^{Синонимы (в кавычках)}
 :END:
 ,#+title: ${title}
 ,#+author: %n
+,#+date: %U
 ,#+language: русский
 ,#+notetype: организация
 ,#+filetags: :${slug}:%^G")
@@ -830,12 +838,13 @@ drag&drop functionality
            :target (file+head
                     "Люди/person-${slug}.org"
                     ":PROPERTIES:
-:DATE:         %U
+:CDATE:         %U
 :ACCESS:       %^{Доступ|public|private|personal|confidentional}
 :ROAM_ALIASES: %^{Синонимы (в кавычках)}
 :END:
 ,#+title: ${title}
 ,#+author: %n
+,#+date: %U
 ,#+language: русский
 ,#+notetype: человек
 ,#+filetags:
