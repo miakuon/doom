@@ -63,3 +63,4 @@
 
 (package! org-fancy-priorities :disable t) ;; they aren't pretty
 (package! org-super-agenda) ;; prettier and more functional org-agenda
+(package! org-ql) ;; powerful searching tool for org-mode
