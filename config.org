@@ -140,10 +140,10 @@ I wrapped most of this block in (after! org).  Without this, my settings might b
   (setq org-agenda-files
         (append
          (directory-files-recursively "~/Гримуар/Организация/Проекты" "\\.org$")
+         (directory-files-recursively "~/Гримуар/Организация/Ценности" "\\.org$")
          '("~/Гримуар/Организация"
-           "~/Гримуар/Организация/Ценности"
            "~/Гримуар/Организация/Планы"
-           "~/Гримуар/Люди"
+           "~/Гримуар/Контакты"
            "~/Гримуар/Заметки"
            "~/Гримуар/Дневник")))
   (setq org-agenda-file-regexp "\\.org\\'")
@@ -247,8 +247,8 @@ I wrapped most of this block in (after! org).  Without this, my settings might b
     "Выберите файл: "
     (mapcar (lambda (f) (file-relative-name f org-directory))
             (append
-             (file-expand-wildcards (concat org-directory "Организация/Ценности/area-*.org"))
-             (file-expand-wildcards (concat org-directory "Организация/Проекты/*/proj-*.org"))))))
+             (file-expand-wildcards (concat org-directory "Организация/Ценности/*/ценность-*.org"))
+             (file-expand-wildcards (concat org-directory "Организация/Проекты/*/проект-*.org"))))))
 
 (after! org
  (setq org-capture-templates
@@ -914,7 +914,7 @@ Test
 ** TODO Contacts
 #+begin_src emacs-lisp :tangle yes
 (after! org
-  (defvar org-contacts-directory (expand-file-name "Люди/" org-directory) "Directory with Org Contacts files")
+  (defvar org-contacts-directory (expand-file-name "Контакты/" org-directory) "Directory with Org Contacts files")
   (setq org-contacts-files (directory-files-recursively org-contacts-directory "\.org$")))
 #+end_src
 ** TODO Input Method
