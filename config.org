@@ -651,7 +651,27 @@ We need ox-man for "Org eXporting" to manpage format and ox-gemini for exporting
 ** Org-download
 drag&drop functionality
 #+begin_src emacs-lisp :tangle yes
-(setq org-download-image-dir "~/Гримуар/Вложения/")
+(after! org
+  (setq org-download-image-dir "attachments"
+      org-download-method 'directory
+      org-download-heading-lvl nil))
+#+end_src
+
+#+begin_src emacs-lisp :tangle yes
+(defun my/org-attach-id-flat (id)
+  "Return flat path for attachment with ID."
+  "")
+
+(after! org
+  (setq org-attach-method 'directory             ;; Храним в общей директории
+        org-attach-preferred-new-method 'ask     ;; Как сохранять когда нет ID и DIR
+        org-attach-directory "attachments"       ;; Папка рядом с org-файлом
+        org-attach-id-dir "attachments"
+        org-attach-use-inheritance nil           ;; Не искать директории выше
+        org-attach-auto-tag nil                  ;; Не добавлять тег :ATTACH:
+        org-attach-store-link-p 'attached        ;; Всегда вставлять ссылку на файл
+        org-attach-id-to-path-function-list
+        '(my/org-attach-id-flat)))
 #+end_src
 ** Org-roam
 [[https://github.com/org-roam/org-roam][Org-roam]] is a plain-text knowledge management system.  Org-roam borrows principles from the =Zettelkasten= method, providing a solution for non-hierarchical note-taking.  It should also work as a plug-and-play solution for anyone already using Org-mode for their personal wiki.
