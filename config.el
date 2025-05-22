@@ -14,11 +14,82 @@
 (set-language-environment "Russian")
 (prefer-coding-system 'utf-8)
 
+(defun my-doom-dashboard-banner ()
+  "Custom dashboard banner."
+  (let* ((banner
+          '("I had once screamed."
+            "              Gradually, I lost my voice."
+            "I had once cried."
+            "              Gradually, I lost my tears."
+            "I had once grieved."
+            "              Gradually, I became able to withstand everything."
+            "I had once rejoiced."
+            "              Gradually, I became unmoved by the world."
+            "And now!"
+            " "
+            "All I have left is an expressionless face,"
+            "              My gaze is as tough as a monolith,"
+            "Only perseverance remains in my heart."
+            " "
+            "This is my own insignificant person, Kuon Mia's – Perseverance!"
+            " "
+            " "))
+         (width (window-width))
+         (longest-line (apply #'max (mapcar #'length banner))))
+    (put-text-property
+     (point)
+     (dolist (line banner (point))
+       (insert (+doom-dashboard--center
+                +doom-dashboard--width
+                (concat
+                 line (make-string (max 0 (- longest-line (length line)))
+                                   32)))
+               "\n"))
+     'face 'doom-dashboard-banner)))
+
+(after! doom
+  (setq +doom-dashboard-menu-sections
+        '(("Recently opened files" :icon
+           (nerd-icons-faicon "nf-fa-file_text" :face 'doom-dashboard-menu-title)
+           :action recentf-open-files)
+          ("Reload last session" :icon
+           (nerd-icons-octicon "nf-oct-history" :face 'doom-dashboard-menu-title)
+           :when
+           (cond
+            ((modulep! :ui workspaces)
+             (file-exists-p
+              (expand-file-name persp-auto-save-fname persp-save-dir)))
+            ((require 'desktop nil t)
+             (file-exists-p
+              (desktop-full-file-name))))
+           :action doom/quickload-session)
+          ("Open org-agenda" :icon
+           (nerd-icons-octicon "nf-oct-calendar" :face 'doom-dashboard-menu-title)
+           :when
+           (fboundp 'org-agenda)
+           :action org-agenda)
+          ("Open project" :icon
+           (nerd-icons-octicon "nf-oct-briefcase" :face 'doom-dashboard-menu-title)
+           :action projectile-switch-project)
+          ("Jump to bookmark" :icon
+           (nerd-icons-octicon "nf-oct-bookmark" :face 'doom-dashboard-menu-title)
+           :action bookmark-jump)
+          ("Open private configuration" :icon
+           (nerd-icons-octicon "nf-oct-tools" :face 'doom-dashboard-menu-title)
+           :when
+           (file-directory-p doom-user-dir)
+           :action doom/open-private-config)
+          ("Open documentation" :icon
+           (nerd-icons-octicon "nf-oct-book" :face 'doom-dashboard-menu-title)
+           :action doom/help))
+        +doom-dashboard-ascii-banner-fn #'my-doom-dashboard-banner
+        +doom-dashboard-inhibit-refresh t))
+
 ;(map! :leader
 ;      :desc "Org babel tangle" "m B" #'org-babel-tangle)
 (after! org
   (setq org-directory "~/Гримуар/"
-        org-default-notes-file (expand-file-name "Входящие/Заметки.org" org-directory)
+        org-default-notes-file (expand-file-name "Организация/Входящее.org" org-directory)
         org-id-locations-file (expand-file-name ".orgids" org-directory)
         ;; org-ellipsis " ▼ " ; changes outline, default is "[...]"
         ;; org-superstar-headline-bullets-list '("◉" "●" "○" "◆" "●" "○" "◆")

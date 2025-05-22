@@ -64,20 +64,87 @@ Settings related to fonts within Doom Emacs:
 * TODO MODELINE
 The modeline is the bottom status bar that appears in Emacs windows.  For more information on what is available to configure in the Doom modeline, check out:
 https://github.com/seagle0128/doom-modeline
-* TODO START PAGE
-Instead of using Doom's Dashboard or the Emacs Dashboard program, I have decided to just set an custom start file as my "dashboard" since it allows me more customization options.  I have added to the 'start-mode-hook' the argument 'read-only-mode'.  This is to prevent accidental editing of the start file, and to prevent clashes with the 'start-mode' specific keybindings.  You can toggle on/off read-only-mode with 'SPC t r'.
+* Start Page
+The dashboard that appears when Doom Emacs starts
 
-#+begin_src emacs-lisp :tangle no
-(setq initial-buffer-choice "~/.config/doom/start.org")
+#+begin_src emacs-lisp :tangle yes
+(defun my-doom-dashboard-banner ()
+  "Custom dashboard banner."
+  (let* ((banner
+          '("I had once screamed."
+            "              Gradually, I lost my voice."
+            "I had once cried."
+            "              Gradually, I lost my tears."
+            "I had once grieved."
+            "              Gradually, I became able to withstand everything."
+            "I had once rejoiced."
+            "              Gradually, I became unmoved by the world."
+            "And now!"
+            " "
+            "All I have left is an expressionless face,"
+            "              My gaze is as tough as a monolith,"
+            "Only perseverance remains in my heart."
+            " "
+            "This is my own insignificant person, Kuon Mia's – Perseverance!"
+            " "
+            " "))
+         (width (window-width))
+         (longest-line (apply #'max (mapcar #'length banner))))
+    (put-text-property
+     (point)
+     (dolist (line banner (point))
+       (insert (+doom-dashboard--center
+                +doom-dashboard--width
+                (concat
+                 line (make-string (max 0 (- longest-line (length line)))
+                                   32)))
+               "\n"))
+     'face 'doom-dashboard-banner)))
 
-(add-hook 'start-mode-hook 'read-only-mode) ;; make start.org read-only; use 'SPC t r' to toggle off read-only.
-(provide 'start-mode)
+(after! doom
+  (setq +doom-dashboard-menu-sections
+        '(("Recently opened files" :icon
+           (nerd-icons-faicon "nf-fa-file_text" :face 'doom-dashboard-menu-title)
+           :action recentf-open-files)
+          ("Reload last session" :icon
+           (nerd-icons-octicon "nf-oct-history" :face 'doom-dashboard-menu-title)
+           :when
+           (cond
+            ((modulep! :ui workspaces)
+             (file-exists-p
+              (expand-file-name persp-auto-save-fname persp-save-dir)))
+            ((require 'desktop nil t)
+             (file-exists-p
+              (desktop-full-file-name))))
+           :action doom/quickload-session)
+          ("Open org-agenda" :icon
+           (nerd-icons-octicon "nf-oct-calendar" :face 'doom-dashboard-menu-title)
+           :when
+           (fboundp 'org-agenda)
+           :action org-agenda)
+          ("Open project" :icon
+           (nerd-icons-octicon "nf-oct-briefcase" :face 'doom-dashboard-menu-title)
+           :action projectile-switch-project)
+          ("Jump to bookmark" :icon
+           (nerd-icons-octicon "nf-oct-bookmark" :face 'doom-dashboard-menu-title)
+           :action bookmark-jump)
+          ("Open private configuration" :icon
+           (nerd-icons-octicon "nf-oct-tools" :face 'doom-dashboard-menu-title)
+           :when
+           (file-directory-p doom-user-dir)
+           :action doom/open-private-config)
+          ("Open documentation" :icon
+           (nerd-icons-octicon "nf-oct-book" :face 'doom-dashboard-menu-title)
+           :action doom/help))
+        +doom-dashboard-ascii-banner-fn #'my-doom-dashboard-banner
+        +doom-dashboard-inhibit-refresh t))
 #+end_src
+
 * TODO Org
 ** Org-mode
 I wrapped most of this block in (after! org).  Without this, my settings might be evaluated too early, which will result in my settings being overwritten by Doom's defaults.  I have also enabled org-journal, org-superstar and org-roam by adding (+journal +pretty +roam2) to the org section of my Doom Emacs init.el.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 ;(map! :leader
 ;      :desc "Org babel tangle" "m B" #'org-babel-tangle)
 (after! org
