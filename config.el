@@ -3,7 +3,7 @@
 
 (setq user-full-name "Mia Kuon"
       user-mail-address "mia.kuon@gmail.com"
-      doom-user-dir "/home/mia/.config/doom")
+      doom-user-dir (getenv "DOOMDIR"))
 
 (add-to-list 'initial-frame-alist '(fullscreen . fullboth))
 (setq doom-theme 'doom-one)
@@ -98,24 +98,32 @@
         org-hide-emphasis-markers t
         ;; ex. of org-link-abbrev-alist in action
         ;; [[arch-wiki:Name_of_Page][Description]]
-        ;; org-link-abbrev-alist    ; This overwrites the default Doom org-link-abbrev-list
-        ;;   '(("google" . "http://www.google.com/search?q=")
-        ;;     ("arch-wiki" . "https://wiki.archlinux.org/index.php/")
-        ;;     ("ddg" . "https://duckduckgo.com/?q=")
-        ;;     ("wiki" . "https://en.wikipedia.org/wiki/"))
+        org-link-abbrev-alist    ; This overwrites the default Doom org-link-abbrev-list
+          '(("google" . "http://www.google.com/search?q=")
+            ("archwiki" . "https://wiki.archlinux.org/index.php/")
+            ("doomdir" . "/home/mia/.dotfiles/.config/doom/%s")
+            ("emacsdir" . "/home/mia/.config/emacs/%s")
+            ("doom-repo" . "https://github.com/doomemacs/doomemacs/%s")
+            ("wolfram" . "https://wolframalpha.com/input/?i=%s")
+            ("wikipedia" . "https://en.wikipedia.org/wiki/%s")
+            ("duckduckgo" . "https://duckduckgo.com/?q=%s")
+            ("gmap" . "https://maps.google.com/maps?q=%s")
+            ("gimages" . "https://google.com/images?q=%s")
+            ("youtube" . "https://youtube.com/watch?v=%s")
+            ("github" . "https://github.com/%s"))
         ;; org-table-convert-region-max-lines 20000
         org-todo-keywords         ; This overwrites the default Doom org-todo-keywords
           '((sequence             ; Tasks
               "TODO(t)"           ; A task that is ready to be tackled
-              "WAIT(w)"           ; Something is holding up this task
               "STRT(s)"           ; Task is started
+              "WAIT(w)"           ; Something is holding up this task
               "IDEA(i)"           ; An idea that needs to be moved or to be done
               "PROJ(p)"           ; A project that contains other tasks
               "HBBT(h)"           ; A habbit
               "|"                 ; The pipe necessary to separate "active" states and "inactive" states
+              "CANCELLED(c)"      ; Task has been cancelled
               "DONE(d)"           ; Task has been completed
-              "FAIL(f)"           ; Task has been failed
-              "CANCELLED(c)" )    ; Task has been cancelled
+              "FAIL(f)")          ; Task has been failed
             (sequence             ; States
               "[ ](T)"
               "[-](S)"
@@ -434,17 +442,151 @@
 (defun auto-extract-org-roam-templates ()
   "Run extract-org-roam-templates when saving config.org."
   (when (string-equal (buffer-file-name)
-                      (expand-file-name "~/.dotfiles/.config/doom/config.org"))
+                      (expand-file-name "config.org" doom-user-dir))
     (message "Extracting org-roam-templates")
     (extract-org-roam-templates)))
 
 (add-hook 'after-save-hook #'auto-extract-org-roam-templates)
 
 (after! org
-  (setq org-brain-path org-directory))
+  (cl-defmethod org-roam-node-slug ((node org-roam-node))
+  "My custom slug of NODE."
+  (let ((title (org-roam-node-title node)))
+    (cl-flet* ((cl-replace (title pair) (replace-regexp-in-string (car pair) (cdr pair) title)))
+      (let* ((pairs `(("[^[:word:][:digit:]]" . "_")  ;; convert anything not word chars, digits, or hyphens
+                      ("__*" . "_")                    ;; remove sequential underscores
+                      ("^_" . "")                      ;; remove starting underscore
+                      ("_$" . "")))                    ;; remove ending underscore
+             (slug (-reduce-from #'cl-replace title pairs)))
+        (downcase slug))))))
+
+;; Переменные конфигурации
+(defvar ontology-file (expand-file-name "ontology.org" (getenv "DOOMDIR"))
+  "Путь к файлу онтологий")
+
+(defvar ontology-pattern "\\(_[^_]+_\\):\\s-*\\[\\[\\([^]]+\\)\\]\\[\\([^]]+\\)\\]\\]"
+  "Регулярное выражение для поиска конструкций онтологии")
+
+(defun ontology-extract-and-save ()
+  "Извлекает онтологию из конструкции под курсором и сохраняет в ontology.org"
+  (interactive)
+  (let ((ontology-name (ontology-get-at-point)))
+
+    (unless ontology-name
+      (error "Курсор не находится на конструкции онтологии"))
+
+    ;; Проверяем, существует ли уже такая онтология
+    (let ((existing-category (ontology-get-category ontology-name)))
+      (if existing-category
+          (message "Онтология '%s' уже существует в категории '%s'" ontology-name existing-category)
+
+        ;; Предлагаем выбрать категорию
+        (let ((category (completing-read
+                        (format "Выберите категорию для '%s': " ontology-name)
+                        '("Parent" "Child" "Friend" "None" "Unassigned")
+                        nil t)))
+
+          ;; Добавляем онтологию в файл
+          (ontology-add-to-file ontology-name category)
+          (message "Онтология '%s' добавлена в категорию '%s'" ontology-name category))))))
+
+(defun ontology-get-category (ontology-name)
+  "Возвращает категорию онтологии или nil, если онтология не найдена"
+  (when (file-exists-p ontology-file)
+    (with-temp-buffer
+      (insert-file-contents ontology-file)
+      (goto-char (point-min))
+      (let ((current-category nil)
+            (found nil))
+        (while (and (not (eobp)) (not found))
+          (let ((line (string-trim (thing-at-point 'line t))))
+            (cond
+             ;; Заголовок категории
+             ((string-match "^\\* \\(.+\\)$" line)
+              (setq current-category (match-string 1 line)))
+             ;; Элемент списка
+             ((string-match "^-\\s-*\\(.+\\)$" line)
+              (when (string= (match-string 1 line) ontology-name)
+                (setq found current-category)))))
+          (forward-line 1))
+        found))))
+
+(defun ontology-add-to-file (ontology category)
+  "Добавляет онтологию в указанную категорию в файле"
+  (with-temp-buffer
+    ;; Если файл существует, загружаем его содержимое
+    (when (file-exists-p ontology-file)
+      (insert-file-contents ontology-file))
+
+    ;; Если файл пустой или не существует, создаем базовую структуру
+    (when (= (point-min) (point-max))
+      (insert "* Parent\n* Friend\n* Child\n* None\n* Unassigned\n"))
+
+    ;; Ищем нужную категорию
+    (goto-char (point-min))
+    (if (re-search-forward (format "^\\* %s$" category) nil t)
+        (progn
+          ;; Находим конец секции (следующий заголовок или конец файла)
+          (let ((section-start (point))
+                (section-end (if (re-search-forward "^\\*" nil t)
+                                (progn (beginning-of-line) (point))
+                              (point-max))))
+            ;; Переходим к концу секции
+            (goto-char section-end)
+            ;; Если мы не в конце файла, вставляем перед следующим заголовком
+            (when (< (point) (point-max))
+              (backward-char))
+            ;; Вставляем новую онтологию
+            (unless (bolp) (insert "\n"))
+            (insert (format "- %s\n" ontology))))
+
+      ;; Если категория не найдена, добавляем её в конец
+      (goto-char (point-max))
+      (unless (bolp) (insert "\n"))
+      (insert (format "* %s\n- %s\n" category ontology)))
+
+    ;; Сохраняем файл
+    (write-file ontology-file)))
+
+(defun ontology-get-at-point ()
+  "Возвращает название онтологии под курсором или nil"
+  (save-excursion
+    (beginning-of-line)
+    (when (re-search-forward ontology-pattern (line-end-position) t)
+      (substring (match-string 1) 1 -1))))
+
+(defun ontology-list-all ()
+  "Возвращает список всех онтологий из файла"
+  (let ((ontologies nil))
+    (when (file-exists-p ontology-file)
+      (with-temp-buffer
+        (insert-file-contents ontology-file)
+        (goto-char (point-min))
+        (while (re-search-forward "^-\\s-*\\(.+\\)$" nil t)
+          (push (match-string 1) ontologies))))
+    (reverse ontologies)))
+
+;; Дополнительная функция для быстрого просмотра онтологий
+(defun ontology-show-all ()
+  "Показывает все существующие онтологии"
+  (interactive)
+  (let ((ontologies (ontology-list-all)))
+    (if ontologies
+        (message "Существующие онтологии: %s" (mapconcat 'identity ontologies ", "))
+      (message "Файл онтологий пуст или не существует"))))
 
 (after! org
   (setq +org-capture-journal-file (expand-file-name "Дневник" org-directory)))
+
+(after! org
+  (defvar org-contacts-directory (expand-file-name "Контакты/" org-directory) "Directory with Org Contacts files")
+  (setq org-contacts-files (directory-files-recursively org-contacts-directory "\.org$")))
+
+(after! ob-plantuml
+  (setq plantuml-jar-path nil)
+  (setq org-plantuml-jar-path plantuml-jar-path)
+  (setq plantuml-exec-mode 'executable)
+  (setq org-plantuml-exec-mode plantuml-exec-mode))
 
 (defvar my/autocommit-timer "auto-commit-grimuar.timer" "Название auto-commit таймера")
 
@@ -499,8 +641,7 @@
       trash-directory "~/.local/share/Trash/files/")
 
 (after! yasnippet
-  (setq yas-snippet-dirs '("~/.config/doom/snippets"))
-  )
+  (setq yas-snippet-dirs '((expand-file-name "snippets" doom-user-dir))))
 
 (setq projectile-project-search-path `("~/Documents/Code/" "~/source/" "~/.suckless/" "~/.config/"))
 
@@ -535,7 +676,7 @@
 
 (after! elfeed
   (setq elfeed-search-filter "@1-month-ago +unread"
-        rmh-elfeed-org-files '("~/.config/doom/elfeed.org")
+        rmh-elfeed-org-files '((expand-file-name "elfeed.org" doom-user-dir))
         elfeed-goodies/entry-pane-size 0.5))
 
 (add-hook 'elfeed-search-mode-hook #'elfeed-update)
