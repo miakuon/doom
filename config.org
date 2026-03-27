@@ -1649,17 +1649,27 @@ Doesn't work.
   (define-key nov-mode-map (kbd "o") 'nov-xwidget-view)
   (add-hook 'nov-mode-hook 'nov-xwidget-inject-all-files))
 #+end_src
-* TODO PASSWORD STORE
+* PASSWORD STORE
 Uses the standard Unix password store "pass".
 
-#+begin_src emacs-lisp :tangle no
-(use-package! password-store)
+#+begin_src emacs-lisp :tangle yes
+;; (use-package! password-store)
+(map! :leader
+      (:prefix "o"
+       :desc "pass" "p" #'pass))
+#+end_src
+* CALCULATOR
+#+begin_src emacs-lisp :tangle yes
+(map! :leader
+      (:prefix "o"
+       :desc "full-calc" "C" #'full-calc-keypad
+       :desc "calc" "c" #'calc))
 #+end_src
 * TODO REGISTERS
 Emacs registers are compartments where you can save text, rectangles and positions for later use. Once you save text or a rectangle in a register, you can copy it into the buffer once or many times; once you save a position in a register, you can jump back to that position once or many times.  The default GNU Emacs keybindings for these commands (with the exception of counsel-register) involves 'C-x r' followed by one or more other keys.  I wanted to make this a little more user friendly, and since I am using Doom Emacs, I choose to replace the 'C-x r' part of the key chords with 'SPC r'.
 
-| COMMAND                          | DESCRIPTION                      | KEYBINDING |
-|----------------------------------+----------------------------------+------------|
+| COMMAND                          | DESCRIPTION                        | KEYBINDING |
+|----------------------------------+------------------------------------+------------|
 | copy-to-register                 | /Copy to register/                 | SPC r c    |
 | frameset-to-register             | /Frameset to register/             | SPC r f    |
 | insert-register                  | /Insert contents of register/      | SPC r i    |
