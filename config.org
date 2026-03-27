@@ -427,7 +427,7 @@ I have created an interactive function for each color scheme (M-x dt/org-colors-
          (org-level-7 1.1 "#46d9ff" normal)
          (org-level-8 1.0 "#ff6c6b" normal)))
     (set-face-attribute (nth 0 face) nil :font doom-variable-pitch-font :weight (nth 3 face) :height (nth 1 face) :foreground (nth 2 face)))
-    (set-face-attribute 'org-table nil :font doom-font :weight 'normal :height 1.0 :foreground "#bfafdf"))
+  (set-face-attribute 'org-table nil :font doom-font :weight 'normal :height 1.0 :foreground "#bfafdf"))
 
 (defun dt/org-colors-dracula ()
   "Enable Dracula colors for Org headers."
@@ -443,7 +443,7 @@ I have created an interactive function for each color scheme (M-x dt/org-colors-
          (org-level-7 1.1 "#5af78e" normal)
          (org-level-8 1.0 "#ff92d0" normal)))
     (set-face-attribute (nth 0 face) nil :font doom-variable-pitch-font :weight (nth 3 face) :height (nth 1 face) :foreground (nth 2 face)))
-    (set-face-attribute 'org-table nil :font doom-font :weight 'normal :height 1.0 :foreground "#bfafdf"))
+  (set-face-attribute 'org-table nil :font doom-font :weight 'normal :height 1.0 :foreground "#bfafdf"))
 
 (defun dt/org-colors-gruvbox-dark ()
   "Enable Gruvbox Dark colors for Org headers."
@@ -459,7 +459,7 @@ I have created an interactive function for each color scheme (M-x dt/org-colors-
          (org-level-7 1.1 "#d79921" normal)
          (org-level-8 1.0 "#8ec07c" normal)))
     (set-face-attribute (nth 0 face) nil :font doom-variable-pitch-font :weight (nth 3 face) :height (nth 1 face) :foreground (nth 2 face)))
-    (set-face-attribute 'org-table nil :font doom-font :weight 'normal :height 1.0 :foreground "#bfafdf"))
+  (set-face-attribute 'org-table nil :font doom-font :weight 'normal :height 1.0 :foreground "#bfafdf"))
 
 (defun dt/org-colors-monokai-pro ()
   "Enable Monokai Pro colors for Org headers."
@@ -475,7 +475,7 @@ I have created an interactive function for each color scheme (M-x dt/org-colors-
          (org-level-7 1.1 "#78dce8" normal)
          (org-level-8 1.0 "#ab9df2" normal)))
     (set-face-attribute (nth 0 face) nil :font doom-variable-pitch-font :weight (nth 3 face) :height (nth 1 face) :foreground (nth 2 face)))
-    (set-face-attribute 'org-table nil :font doom-font :weight 'normal :height 1.0 :foreground "#bfafdf"))
+  (set-face-attribute 'org-table nil :font doom-font :weight 'normal :height 1.0 :foreground "#bfafdf"))
 
 (defun dt/org-colors-nord ()
   "Enable Nord colors for Org headers."
@@ -491,7 +491,7 @@ I have created an interactive function for each color scheme (M-x dt/org-colors-
          (org-level-7 1.1 "#81a1c1" normal)
          (org-level-8 1.0 "#b48ead" normal)))
     (set-face-attribute (nth 0 face) nil :font doom-variable-pitch-font :weight (nth 3 face) :height (nth 1 face) :foreground (nth 2 face)))
-    (set-face-attribute 'org-table nil :font doom-font :weight 'normal :height 1.0 :foreground "#bfafdf"))
+  (set-face-attribute 'org-table nil :font doom-font :weight 'normal :height 1.0 :foreground "#bfafdf"))
 
 (defun dt/org-colors-oceanic-next ()
   "Enable Oceanic Next colors for Org headers."
@@ -507,7 +507,7 @@ I have created an interactive function for each color scheme (M-x dt/org-colors-
          (org-level-7 1.1 "#6699cc" normal)
          (org-level-8 1.0 "#c594c5" normal)))
     (set-face-attribute (nth 0 face) nil :font doom-variable-pitch-font :weight (nth 3 face) :height (nth 1 face) :foreground (nth 2 face)))
-    (set-face-attribute 'org-table nil :font doom-font :weight 'normal :height 1.0 :foreground "#bfafdf"))
+  (set-face-attribute 'org-table nil :font doom-font :weight 'normal :height 1.0 :foreground "#bfafdf"))
 
 (defun dt/org-colors-palenight ()
   "Enable Palenight colors for Org headers."
@@ -523,7 +523,7 @@ I have created an interactive function for each color scheme (M-x dt/org-colors-
          (org-level-7 1.1 "#f07178" normal)
          (org-level-8 1.0 "#ddffa7" normal)))
     (set-face-attribute (nth 0 face) nil :font doom-variable-pitch-font :weight (nth 3 face) :height (nth 1 face) :foreground (nth 2 face)))
-    (set-face-attribute 'org-table nil :font doom-font :weight 'normal :height 1.0 :foreground "#bfafdf"))
+  (set-face-attribute 'org-table nil :font doom-font :weight 'normal :height 1.0 :foreground "#bfafdf"))
 
 (defun dt/org-colors-solarized-dark ()
   "Enable Solarized Dark colors for Org headers."
@@ -539,7 +539,7 @@ I have created an interactive function for each color scheme (M-x dt/org-colors-
          (org-level-7 1.1 "#2aa198" normal)
          (org-level-8 1.0 "#657b83" normal)))
     (set-face-attribute (nth 0 face) nil :font doom-variable-pitch-font :weight (nth 3 face) :height (nth 1 face) :foreground (nth 2 face)))
-    (set-face-attribute 'org-table nil :font doom-font :weight 'normal :height 1.0 :foreground "#bfafdf"))
+  (set-face-attribute 'org-table nil :font doom-font :weight 'normal :height 1.0 :foreground "#bfafdf"))
 
 (defun dt/org-colors-solarized-light ()
   "Enable Solarized Light colors for Org headers."
@@ -555,7 +555,7 @@ I have created an interactive function for each color scheme (M-x dt/org-colors-
          (org-level-7 1.1 "#2aa198" normal)
          (org-level-8 1.0 "#657b83" normal)))
     (set-face-attribute (nth 0 face) nil :font doom-variable-pitch-font :weight (nth 3 face) :height (nth 1 face) :foreground (nth 2 face)))
-    (set-face-attribute 'org-table nil :font doom-font :weight 'normal :height 1.0 :foreground "#bfafdf"))
+  (set-face-attribute 'org-table nil :font doom-font :weight 'normal :height 1.0 :foreground "#bfafdf"))
 
 (defun dt/org-colors-tomorrow-night ()
   "Enable Tomorrow Night colors for Org headers."
@@ -571,7 +571,7 @@ I have created an interactive function for each color scheme (M-x dt/org-colors-
          (org-level-7 1.1 "#b77ee0" normal)
          (org-level-8 1.0 "#9ec400" normal)))
     (set-face-attribute (nth 0 face) nil :font doom-variable-pitch-font :weight (nth 3 face) :height (nth 1 face) :foreground (nth 2 face)))
-    (set-face-attribute 'org-table nil :font doom-font :weight 'normal :height 1.0 :foreground "#bfafdf"))
+  (set-face-attribute 'org-table nil :font doom-font :weight 'normal :height 1.0 :foreground "#bfafdf"))
 
 ;; Load our desired dt/org-colors-* theme on startup
 (dt/org-colors-doom-one)
@@ -610,7 +610,7 @@ We need ox-man for "Org eXporting" to manpage format and ox-gemini for exporting
          :publishing-function org-html-publish-to-html
          :headline-levels 4             ; Just the default for this project.
          :auto-preamble t)
-         ("man0p"
+        ("man0p"
          :base-directory "~/nc/gitlab-repos/distro.tube/man-org/man0p/"
          :base-extension "org"
          :publishing-directory "~/nc/gitlab-repos/distro.tube/html/man-org/man0p/"
@@ -618,7 +618,7 @@ We need ox-man for "Org eXporting" to manpage format and ox-gemini for exporting
          :publishing-function org-html-publish-to-html
          :headline-levels 4             ; Just the default for this project.
          :auto-preamble t)
-         ("man1"
+        ("man1"
          :base-directory "~/nc/gitlab-repos/distro.tube/man-org/man1/"
          :base-extension "org"
          :publishing-directory "~/nc/gitlab-repos/distro.tube/html/man-org/man1/"
@@ -626,7 +626,7 @@ We need ox-man for "Org eXporting" to manpage format and ox-gemini for exporting
          :publishing-function org-html-publish-to-html
          :headline-levels 4             ; Just the default for this project.
          :auto-preamble t)
-         ("man1p"
+        ("man1p"
          :base-directory "~/nc/gitlab-repos/distro.tube/man-org/man1p/"
          :base-extension "org"
          :publishing-directory "~/nc/gitlab-repos/distro.tube/html/man-org/man1p/"
@@ -634,7 +634,7 @@ We need ox-man for "Org eXporting" to manpage format and ox-gemini for exporting
          :publishing-function org-html-publish-to-html
          :headline-levels 4             ; Just the default for this project.
          :auto-preamble t)
-         ("man2"
+        ("man2"
          :base-directory "~/nc/gitlab-repos/distro.tube/man-org/man2/"
          :base-extension "org"
          :publishing-directory "~/nc/gitlab-repos/distro.tube/html/man-org/man2/"
@@ -642,7 +642,7 @@ We need ox-man for "Org eXporting" to manpage format and ox-gemini for exporting
          :publishing-function org-html-publish-to-html
          :headline-levels 4             ; Just the default for this project.
          :auto-preamble t)
-         ("man3"
+        ("man3"
          :base-directory "~/nc/gitlab-repos/distro.tube/man-org/man3/"
          :base-extension "org"
          :publishing-directory "~/nc/gitlab-repos/distro.tube/html/man-org/man3/"
@@ -650,7 +650,7 @@ We need ox-man for "Org eXporting" to manpage format and ox-gemini for exporting
          :publishing-function org-html-publish-to-html
          :headline-levels 4             ; Just the default for this project.
          :auto-preamble t)
-         ("man3p"
+        ("man3p"
          :base-directory "~/nc/gitlab-repos/distro.tube/man-org/man3p/"
          :base-extension "org"
          :publishing-directory "~/nc/gitlab-repos/distro.tube/html/man-org/man3p/"
@@ -658,7 +658,7 @@ We need ox-man for "Org eXporting" to manpage format and ox-gemini for exporting
          :publishing-function org-html-publish-to-html
          :headline-levels 4             ; Just the default for this project.
          :auto-preamble t)
-         ("man4"
+        ("man4"
          :base-directory "~/nc/gitlab-repos/distro.tube/man-org/man4/"
          :base-extension "org"
          :publishing-directory "~/nc/gitlab-repos/distro.tube/html/man-org/man4/"
@@ -666,7 +666,7 @@ We need ox-man for "Org eXporting" to manpage format and ox-gemini for exporting
          :publishing-function org-html-publish-to-html
          :headline-levels 4             ; Just the default for this project.
          :auto-preamble t)
-         ("man5"
+        ("man5"
          :base-directory "~/nc/gitlab-repos/distro.tube/man-org/man5/"
          :base-extension "org"
          :publishing-directory "~/nc/gitlab-repos/distro.tube/html/man-org/man5/"
@@ -674,7 +674,7 @@ We need ox-man for "Org eXporting" to manpage format and ox-gemini for exporting
          :publishing-function org-html-publish-to-html
          :headline-levels 4             ; Just the default for this project.
          :auto-preamble t)
-         ("man6"
+        ("man6"
          :base-directory "~/nc/gitlab-repos/distro.tube/man-org/man6/"
          :base-extension "org"
          :publishing-directory "~/nc/gitlab-repos/distro.tube/html/man-org/man6/"
@@ -682,7 +682,7 @@ We need ox-man for "Org eXporting" to manpage format and ox-gemini for exporting
          :publishing-function org-html-publish-to-html
          :headline-levels 4             ; Just the default for this project.
          :auto-preamble t)
-         ("man7"
+        ("man7"
          :base-directory "~/nc/gitlab-repos/distro.tube/man-org/man7/"
          :base-extension "org"
          :publishing-directory "~/nc/gitlab-repos/distro.tube/html/man-org/man7/"
@@ -690,7 +690,7 @@ We need ox-man for "Org eXporting" to manpage format and ox-gemini for exporting
          :publishing-function org-html-publish-to-html
          :headline-levels 4             ; Just the default for this project.
          :auto-preamble t)
-         ("man8"
+        ("man8"
          :base-directory "~/nc/gitlab-repos/distro.tube/man-org/man8/"
          :base-extension "org"
          :publishing-directory "~/nc/gitlab-repos/distro.tube/html/man-org/man8/"
@@ -698,14 +698,14 @@ We need ox-man for "Org eXporting" to manpage format and ox-gemini for exporting
          :publishing-function org-html-publish-to-html
          :headline-levels 4             ; Just the default for this project.
          :auto-preamble t)
-         ("org-static"
+        ("org-static"
          :base-directory "~/Org/website"
          :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf"
          :publishing-directory "~/public_html/"
          :recursive t
          :exclude ".*/org-html-themes/.*"
          :publishing-function org-publish-attachment)
-         ("dtos.dev"
+        ("dtos.dev"
          :base-directory "~/nc/gitlab-repos/dtos.dev/"
          :base-extension "org"
          :publishing-directory "~/nc/gitlab-repos/dtos.dev/html/"
@@ -714,15 +714,15 @@ We need ox-man for "Org eXporting" to manpage format and ox-gemini for exporting
          :headline-levels 4             ; Just the default for this project.
          :auto-preamble t)
 
-      ))
+        ))
 #+end_src
 ** Org-download
 drag&drop functionality
 #+begin_src emacs-lisp :tangle yes
 (after! org
   (setq org-download-image-dir "attachments"
-      org-download-method 'directory
-      org-download-heading-lvl nil))
+        org-download-method 'directory
+        org-download-heading-lvl nil))
 #+end_src
 
 #+begin_src emacs-lisp :tangle yes
@@ -744,8 +744,8 @@ drag&drop functionality
 ** Org-roam
 [[https://github.com/org-roam/org-roam][Org-roam]] is a plain-text knowledge management system.  Org-roam borrows principles from the =Zettelkasten= method, providing a solution for non-hierarchical note-taking.  It should also work as a plug-and-play solution for anyone already using Org-mode for their personal wiki.
 
-| COMMAND                | DESCRIPTION                        | KEYBINDING |
-|------------------------+------------------------------------+------------|
+| COMMAND                | DESCRIPTION                          | KEYBINDING |
+|------------------------+--------------------------------------+------------|
 | completion-at-point    | /Completion of node-insert at point/ | SPC n r c  |
 | org-roam-node-find     | /Find node or create a new one/      | SPC n r f  |
 | org-roam-graph         | /Show graph of all nodes/            | SPC n r g  |
@@ -970,7 +970,7 @@ drag&drop functionality
 #+begin_src emacs-lisp :tangle yes
 (defun extract-org-roam-templates ()
   "Extract org-roam-capture-templates from config.org and save to org-roam-templates.el"
-(let ((config-file (expand-file-name "config.org" doom-user-dir))
+  (let ((config-file (expand-file-name "config.org" doom-user-dir))
         (output-file (expand-file-name "org-roam-templates.el" doom-user-dir))
         (template-section nil))
     ;; (message "Читаем файл: %s" config-file)
@@ -988,11 +988,11 @@ drag&drop functionality
 
       ;; Если нашли, записываем в отдельный файл
       ;; (when template-section
-        ;; (message "Шаблоны извлечены, записываем в %s" output-file)
-        (with-temp-file output-file
-          ;; (insert ";; Automatically extracted org-roam-capture-templates\n")
-          (insert template-section)
-          (insert "\n")))))
+      ;; (message "Шаблоны извлечены, записываем в %s" output-file)
+      (with-temp-file output-file
+        ;; (insert ";; Automatically extracted org-roam-capture-templates\n")
+        (insert template-section)
+        (insert "\n")))))
 
 ;; Автоматически запускать после сохранения config.org
 (defun auto-extract-org-roam-templates ()
@@ -1016,15 +1016,15 @@ Default slug but keeps glyphs
 #+begin_src emacs-lisp :tangle yes
 (after! org
   (cl-defmethod org-roam-node-slug ((node org-roam-node))
-  "My custom slug of NODE."
-  (let ((title (org-roam-node-title node)))
-    (cl-flet* ((cl-replace (title pair) (replace-regexp-in-string (car pair) (cdr pair) title)))
-      (let* ((pairs `(("[^[:word:][:digit:]]" . "_")  ;; convert anything not word chars, digits, or hyphens
-                      ("__*" . "_")                    ;; remove sequential underscores
-                      ("^_" . "")                      ;; remove starting underscore
-                      ("_$" . "")))                    ;; remove ending underscore
-             (slug (-reduce-from #'cl-replace title pairs)))
-        (downcase slug))))))
+    "My custom slug of NODE."
+    (let ((title (org-roam-node-title node)))
+      (cl-flet* ((cl-replace (title pair) (replace-regexp-in-string (car pair) (cdr pair) title)))
+        (let* ((pairs `(("[^[:word:][:digit:]]" . "_")  ;; convert anything not word chars, digits, or hyphens
+                        ("__*" . "_")                    ;; remove sequential underscores
+                        ("^_" . "")                      ;; remove starting underscore
+                        ("_$" . "")))                    ;; remove ending underscore
+               (slug (-reduce-from #'cl-replace title pairs)))
+          (downcase slug))))))
 #+end_src
 ** Brain
 *** PROJ Ontology
@@ -1053,9 +1053,9 @@ Link types
 
         ;; Предлагаем выбрать категорию
         (let ((category (completing-read
-                        (format "Выберите категорию для '%s': " ontology-name)
-                        '("Parent" "Child" "Friend" "None" "Unassigned")
-                        nil t)))
+                         (format "Выберите категорию для '%s': " ontology-name)
+                         '("Parent" "Child" "Friend" "None" "Unassigned")
+                         nil t)))
 
           ;; Добавляем онтологию в файл
           (ontology-add-to-file ontology-name category)
@@ -1100,8 +1100,8 @@ Link types
           ;; Находим конец секции (следующий заголовок или конец файла)
           (let ((section-start (point))
                 (section-end (if (re-search-forward "^\\*" nil t)
-                                (progn (beginning-of-line) (point))
-                              (point-max))))
+                                 (progn (beginning-of-line) (point))
+                               (point-max))))
             ;; Переходим к концу секции
             (goto-char section-end)
             ;; Если мы не в конце файла, вставляем перед следующим заголовком
@@ -1299,7 +1299,7 @@ CLOSED: [2025-05-22 Чт 19:57]
                     (format "systemctl --user is-active --quiet %s" my/autocommit-timer))))
     (if (eq exit-code 0)
         (my/stop-autocommit)
-        (my/start-autocommit))))
+      (my/start-autocommit))))
 #+end_src
 
 Однократно запустить
@@ -1318,11 +1318,11 @@ CLOSED: [2025-05-22 Чт 19:57]
 #+begin_src emacs-lisp :tangle yes
 (map! :leader
       (:prefix "n" ;; notes menu
-       (:prefix ("g" . "git")
-       :desc "Enable autosave"        "e" #'my/start-autocommit
-       :desc "Disable autosave"       "d" #'my/stop-autocommit
-       :desc "Toggle autosatve"       "t" #'my/toggle-autocommit
-       :desc "Save"                   "s" #'my/run-autocommit-once)))
+               (:prefix ("g" . "git")
+                :desc "Enable autosave"        "e" #'my/start-autocommit
+                :desc "Disable autosave"       "d" #'my/stop-autocommit
+                :desc "Toggle autosatve"       "t" #'my/toggle-autocommit
+                :desc "Save"                   "s" #'my/run-autocommit-once)))
 
 (map! :leader
       (:prefix "t"  ;; toggle menu
@@ -1333,8 +1333,8 @@ CLOSED: [2025-05-22 Чт 19:57]
 ** Keybindings Within Dired With Peep-Dired-Mode Enabled
 If peep-dired is enabled, you will get image previews as you go up/down with 'j' and 'k'
 
-| COMMAND              | DESCRIPTION                              | KEYBINDING |
-|----------------------+------------------------------------------+------------|
+| COMMAND              | DESCRIPTION                                | KEYBINDING |
+|----------------------+--------------------------------------------+------------|
 | peep-dired           | /Toggle previews within dired/             | SPC d p    |
 | peep-dired-next-file | /Move to next file in peep-dired-mode/     | j          |
 | peep-dired-prev-file | /Move to previous file in peep-dired-mode/ | k          |
@@ -1520,11 +1520,11 @@ One of the media players available for Emacs is emms, which stands for Emacs Mul
 
 | COMMAND               | DESCRIPTION                       | KEYBINDING |
 |-----------------------+-----------------------------------+------------|
-| emms-playlist-mode-go | /Switch to the playlist buffer/     | SPC a a    |
-| emms-pause            | /Pause the track/                   | SPC a x    |
-| emms-stop             | /Stop the track/                    | SPC a s    |
-| emms-previous         | /Play previous track in playlist/   | SPC a p    |
-| emms-next             | /Play next track in playlist/       | SPC a n    |
+| emms-playlist-mode-go | /Switch to the playlist buffer/   | SPC a a    |
+| emms-pause            | /Pause the track/                 | SPC a x    |
+| emms-stop             | /Stop the track/                  | SPC a s    |
+| emms-previous         | /Play previous track in playlist/ | SPC a p    |
+| emms-next             | /Play next track in playlist/     | SPC a n    |
 
 #+begin_src emacs-lisp :tangle no
 (emms-all)
@@ -1546,8 +1546,8 @@ One of the media players available for Emacs is emms, which stands for Emacs Mul
 * TODO ERC
 ERC is a built-in Emacs IRC client.
 
-| COMMAND | DESCRIPTION                                 | KEYBINDING |
-|---------+---------------------------------------------+------------|
+| COMMAND | DESCRIPTION                                   | KEYBINDING |
+|---------+-----------------------------------------------+------------|
 | erc-tls | /Launch ERC using more secure TLS connection/ | SPC e E    |
 
 #+begin_src emacs-lisp :tangle no
