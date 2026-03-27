@@ -17,9 +17,10 @@ Some functionality uses this to identify you, e.g. GPG configuration, email clie
 #+begin_src emacs-lisp :tangle yes
 (setq user-full-name "Mia Kuon"
       user-mail-address "mia.kuon@gmail.com"
-      doom-user-dir (getenv "DOOMDIR"))
-#+end_src
-* TODO Themes
+      doom-user-dir "/home/mia/.dotfiles/.config/doom")
+      #+end_src
+* UI
+** TODO Themes
 /Setting the theme to doom-one.  To try out new themes, I set a keybinding for counsel-load-theme with 'SPC h t'./
 
 *Code*:
@@ -1458,7 +1459,7 @@ Let's also play around with calfw.
 (use-package! calfw-org)  ; for Org and Agenda
 (use-package! calfw-ical) ; for Google Calendar
 ;; (use-package! calfw-cal)  ; for diary
-(load "$DOOMDIR/secrets.el")
+(load (expand-file-name "secrets.el" doom-user-dir))
 
 (defun my-open-calendar ()
   (interactive)
