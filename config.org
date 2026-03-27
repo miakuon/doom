@@ -45,27 +45,38 @@ Some functionality uses this to identify you, e.g. GPG configuration, email clie
 
 #+begin_src emacs-lisp :tangle yes
 (add-to-list 'initial-frame-alist '(fullscreen . fullboth))
+(add-to-list 'default-frame-alist '(fullscreen . fullboth))
 (setq doom-theme 'doom-one)
 
 (setq display-line-numbers-type t)
 (show-paren-mode 1)
 #+end_src
-* TODO FONTS
+** TODO FONTS
 Settings related to fonts within Doom Emacs:
 + 'doom-font' -- standard monospace font that is used for most things in Emacs.
 + 'doom-variable-pitch-font' -- variable font which is useful in some Emacs plugins.
 + 'doom-big-font' -- used in doom-big-font-mode; useful for presentations.
 + 'font-lock-comment-face' -- for comments.
 + 'font-lock-keyword-face' -- for keywords with special significance like 'setq' in elisp.
-* Encoding
-#+begin_src emacs-lisp :tangle yes
-(set-language-environment "Russian")
-(prefer-coding-system 'utf-8)
-#+end_src
-* MODELINE
+** MODELINE
 The modeline is the bottom status bar that appears in Emacs windows.  For more information on what is available to configure in the Doom modeline, check out:
 https://github.com/seagle0128/doom-modeline
-* Start Page
+** Scrolling
+#+begin_src emacs-lisp :tangle yes
+(after! doom-ui
+  (pixel-scroll-precision-mode 1)
+  (setq scroll-step 1
+        scroll-conservatively 101
+        auto-window-vscroll nil)
+
+  (setq mouse-wheel-scroll-amount '(1 ((shift) . 1)))
+  (setq mouse-wheel-progressive-speed nil))
+
+#+end_src
+
+#+RESULTS:
+
+** Start Page
 The dashboard that appears when Doom Emacs starts
 
 #+begin_src emacs-lisp :tangle yes
