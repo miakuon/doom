@@ -1362,8 +1362,14 @@ If peep-dired is enabled, you will get image previews as you go up/down with 'j'
 #+begin_src emacs-lisp :tangle yes
 (evil-define-key 'normal peep-dired-mode-map
   (kbd "j") 'peep-dired-next-file
-  (kbd "k") 'peep-dired-prev-file)
-(add-hook 'peep-dired-hook 'evil-normalize-keymaps)
+  (kbd "k") 'peep-dired-prev-file
+(add-hook 'peep-dired-hook 'evil-normalize-keymaps))
+
+;; (after! dired
+;;   (map! :map dired-mode-map
+;;         :n "RET" #'dired-find-alternate-file
+;;         :n "h" (lambda () (interactive) (find-alternate-file ".."))))
+
 #+end_src
 ** Making deleted files go to trash can
 #+begin_src emacs-lisp :tangle yes
