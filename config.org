@@ -1334,8 +1334,12 @@ CLOSED: [2025-05-22 Чт 19:57]
 
 #+end_src
 ** TODO LaTeX
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp :tangle yes
+(setq +latex-viewers '(zathura))
 (setq org-startup-with-latex-preview nil)
+(after! org
+  ;; увеличить масштаб latex-превью
+  (plist-put org-format-latex-options :scale 2.0))
 #+end_src
 * Babel
 #+begin_src emacs-lisp :tangle yes
