@@ -328,16 +328,15 @@ I wrapped most of this block in (after! org).  Without this, my settings might b
                   nil t nil
                   (lambda (f)
                     (and (file-regular-p f)
-                         (string-match "area-.*\\.org\\'" f)))))
+                         (string-match "ценность-.*\\.org\\'" f)))))
 
 (defun my/org-capture-project-or-area-file ()
   "Prompt for an area- or proj-file"
-   (completing-read
-    "Выберите файл: "
-    (mapcar (lambda (f) (file-relative-name f org-directory))
-            (append
-             (file-expand-wildcards (concat org-directory "Организация/Ценности/*/ценность-*.org"))
-             (file-expand-wildcards (concat org-directory "Организация/Проекты/*/проект-*.org"))))))
+  (completing-read
+   "Выберите файл: "
+   (append
+    (file-expand-wildcards (concat org-directory "Организация/Ценности/*/ценность-*.org"))
+    (file-expand-wildcards (concat org-directory "Организация/Проекты/*/проект-*.org")))))
 
 (after! org
  (setq org-capture-templates
@@ -899,7 +898,7 @@ drag&drop functionality
 :END:"
 
            :target (file+head
-                    "Организация/Ценности/area-${slug}.org"
+                    "Организация/Ценности/ценность-${slug}.org"
                     ":PROPERTIES:
 :CDATE:         %U
 :ACCESS:       %^{Доступ|public|private|personal|confidentional}
@@ -924,7 +923,7 @@ drag&drop functionality
 :VISIBILITY: content
 :END:"
            :target (file+head
-                    "Организация/Проекты/${title}/proj-${slug}.org"
+                    "Организация/Проекты/${title}/проект-${slug}.org"
                     ":PROPERTIES:
 :CDATE:         %U
 :ACCESS:       %^{Доступ|public|private|personal|confidentional}
@@ -941,7 +940,7 @@ drag&drop functionality
            :empty-lines-before 1)
           ("or" "План" plain "* Цели\n%?\n* План\n* Заметки\n* Проекты"
            :target (file+head
-                    "Организация/Планирование/plan-${slug}.org"
+                    "Организация/Планирование/план-${slug}.org"
                     ":PROPERTIES:
 :CDATE:         %U
 :ACCESS:       %^{Доступ|public|private|personal|confidentional}
