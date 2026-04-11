@@ -1424,6 +1424,114 @@ ln -s ~/.local/share/Trash .
       :desc "run region"              "r" #'python-shell-send-region  ;; SPC m r — запустить выделенный код
       :desc "run function"            "j" #'python-shell-send-defun)  ;; SPC m j — отправить функцию в REPL
 #+end_src
+* Mail
+#+begin_src emacs-lisp :tangle yes
+;; (after! mu4e)
+(setq mu4e-maildir "~/mail"
+      mu4e-get-mail-command "mbsync mia-gmail"
+      mu4e-update-interval 600
+      mu4e-index-lazy-check t
+      doom-modeline-mu4e t)
+
+(set-email-account! "mia.kuon@gmail.com"
+                    '((mu4e-sent-folder       . "/mia.kuon@gmail.com/Отправленные")
+                      (mu4e-drafts-folder     . "/mia.kuon@gmail.com/Черновики")
+                      (mu4e-trash-folder      . "/mia.kuon@gmail.com/Корзина")
+                      (mu4e-refile-folder     . "/mia.kuon@gmail.com/Вся почта")
+                      (user-mail-address      . "mia.kuon@gmail.com")
+                      (mu4e-compose-signature . "---\nС уважением,\nКуон Миа Алексеевна")
+                      (smtpmail-smtp-user     . "mia.kuon@gmail.com")
+                      (smtpmail-smtp-server   . "smtp.gmail.com")
+                      ;; (smtpmail-smtp-service  . 587)
+                      ;; (smtpmail-stream-type   . starttls)
+                      (smtpmail-servers-requiring-authorization . "smtp\\.gmail\\.com")
+                      (send-mail-function . async-smtpmail-send-it)
+                      (message-send-mail-function . async-smtpmail-send-it))
+                    t)
+
+(setq +mu4e-gmail-accounts
+      '(("mia.kuon@gmail.com" . "/mia.kuon@gmail.com")))
+
+(setq mu4e-bookmarks
+      `((:name "Входящие"
+         :query "maildir:/mia.kuon@gmail.com/INBOX"
+         :key ?i
+         :favorite t)
+
+        (:name "Отмеченное"
+         :query "flag:flagged"
+         :key ?f)
+
+        (:name "Черновики"
+         :query "maildir:/mia.kuon@gmail.com/Черновики"
+         :key ?d
+         :hide-if-no-unread t)
+
+        (:name "Важные"
+         :query "maildir:/mia.kuon@gmail.com/Важное"
+         :key ?I)
+
+        (:name "Оповещения"
+         :query "maildir:/mia.kuon@gmail.com/Оповещения"
+         :key ?A)
+
+        (:name "Отправленные"
+         :query "maildir:/mia.kuon@gmail.com/Отправленные"
+         :key ?s)
+
+        (:name "Все письма"
+         :query "maildir:/mia.kuon@gmail.com"
+         :key ?a)
+
+        (:name "Сегодня"
+         :query "date:today..now"
+         :key ?t)
+
+        (:name "За последние 7 дней"
+         :query "date:7d..now"
+         :hide-unread t
+         :key ?w)
+
+        (:name "Непрочитанное"
+         :query "flag:unread AND NOT flag:trashed"
+         :key ?u
+         :hide t)
+
+        (:name "Корзина"
+         :query "maildir:/mia.kuon@gmail.com/Корзина"
+         :key ?b
+         :hide t)
+
+        (:name "Спам"
+         :query "maildir:/mia.kuon@gmail.com/Спам"
+         :key ?x
+         :hide t)
+
+        (:name "Аутентификация"
+         :query "maildir:/mia.kuon@gmail.com/Аутентификация"
+         :key ?!
+         :hide t)
+
+        (:name "Заказы"
+         :query "maildir:/mia.kuon@gmail.com/Заказы"
+         :key ?o
+         :hide t)
+
+        (:name "Чеки"
+         :query "maildir:/mia.kuon@gmail.com/Чеки"
+         :key ?B
+         :hide t)
+
+        (:name "Промоакции"
+         :query "maildir:/mia.kuon@gmail.com/Промоакции"
+         :key ?p
+         :hide t)
+
+        (:name "Соцсети"
+         :query "maildir:/mia.kuon@gmail.com/Соцсети"
+         :key ?S
+         :hide t)))
+#+end_src
 * TODO CALENDAR
 Let's make a 12-month calendar available so we can have a calendar app that, when we click on time/date in xmobar, we get a nice 12-month calendar to view.
 
