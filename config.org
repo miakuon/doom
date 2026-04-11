@@ -278,7 +278,7 @@ I wrapped most of this block in (after! org).  Without this, my settings might b
                    ((org-super-agenda-groups
                      '((:auto-group t)
                        (:discard (:not (:tag t)))))))))
-        ("d" "Задачи по дедлайнам"
+        ("D" "Задачи по дедлайнам"
          ((alltodo ""
            ((org-super-agenda-groups
              '((:name "🔴 Просроченные"
@@ -287,7 +287,7 @@ I wrapped most of this block in (after! org).  Without this, my settings might b
                 :and (:deadline future :todo t))
                (:name "⚪ Без дедлайна"
                 :and (:not (:deadline)) :todo t)))))))
-        ("D" "Дедлайны"
+        ("r" "Дедлайны"
          ((alltodo ""
                   ((org-super-agenda-groups
                     '((:name "🔴 Просроченные"
@@ -296,7 +296,7 @@ I wrapped most of this block in (after! org).  Without this, my settings might b
                        :and (:deadline future :todo t))
                       (:name "⚪ Без дедлайна"
                        :and (:not (:deadline)) :todo t)))
-                   (org-agenda-prefix-format "  %12(deadline) %?-20t %s")))))
+                   (org-agenda-prefix-format '((todo . " %i %-12:c[%-5e]%?-12t% s")))))))
         ("g" "Get Things Done"
          ((agenda ""
                   ((org-agenda-skip-function
@@ -319,6 +319,13 @@ I wrapped most of this block in (after! org).  Without this, my settings might b
                       (org-agenda-overriding-header "\nInbox\n")))
           (tags "CLOSED>=\"<today>\""
                 ((org-agenda-overriding-header "\nCompleted today\n")))))
+        ("u" "Unscheduled TODOs by Category"
+         ((alltodo ""
+                   ((org-agenda-overriding-header "Нераспределённые задачи по категориям")
+                    (org-agenda-skip-function
+                     '(org-agenda-skip-entry-if 'scheduled 'deadline))
+                    (org-super-agenda-groups
+                     '((:auto-category t)))))))
         ("d" "Daily View"
          ((agenda ""                             ; Агенда на сегодня
                   ((org-agenda-span 'day)
