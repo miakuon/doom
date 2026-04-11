@@ -1367,12 +1367,11 @@ If peep-dired is enabled, you will get image previews as you go up/down with 'j'
 #+end_src
 ** Making deleted files go to trash can
 #+begin_src emacs-lisp :tangle yes
-(setq delete-by-moving-to-trash t
-      trash-directory "~/.local/share/Trash/files/")
+(setq delete-by-moving-to-trash t)
 #+end_src
 
 =NOTE=: For convenience, you may want to create a symlink to 'local/share/Trash' in your home directory:
-#+begin_example
+#+begin_example bash
 cd ~/
 ln -s ~/.local/share/Trash .
 #+end_example
