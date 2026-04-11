@@ -55,12 +55,14 @@
 
 ;;(package! pacmacs) ; pacman-like game
 
-(unpin! org-roam) ;
-(package! org-roam-ui)
+(unpin! org-roam)      ;; latest org-roam
+(package! org-roam-ui) ;; beautiful graph in browser
 
 ;; (package! gedcom
 ;;   :recipe (:host github :repo "emacssattic/gedcom" :files "*.el"))
 
 (package! org-fancy-priorities :disable t) ;; they aren't pretty
-(package! org-super-agenda) ;; prettier and more functional org-agenda
-(package! org-ql) ;; powerful searching tool for org-mode
+(package! org-super-agenda)                ;; prettier and more functional org-agenda
+(package! org-ql)                          ;; powerful searching tool for org-mode
+;; (package! jupyter)                      ;; jupyter notebooks repl (doesn't edit .ipynb 🙁)
+(package! peep-dired)                      ;; ranger-like dired minor mode
