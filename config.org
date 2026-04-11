@@ -354,70 +354,81 @@ I wrapped most of this block in (after! org).  Without this, my settings might b
 
 ;;; ─── Шаблоны capture ──────────────────────────────────────────────────────────────────
 (after! org
- (setq org-capture-templates
-       `(("g" "GTD")
-         ("gi" "Inbox" entry  (file "Организация/Входящее.org")
-          "* TODO %?\n:PROPERTIES:\n:ENTERED_ON: %U\n:END:"
-          :prepend t :empty-lines-before 1)
-         ("gm" "Meeting" entry  (file+headline "Организация/Расписание.org" "Личное")
-          "* %? %^G\nSCHEDULED: %^T\n:PROPERTIES:\n:ENTERED_ON: %U\n:END:"
-          :prepend t)
-         ("gc" "Current" entry (file "Организация/Текущее.org")
-          "* TODO %?\nSCHEDULED: %t\n:PROPERTIES:\n:ENTERED_ON: %U\n:END:"
-          :prepend t :empty-lines-before 1)
-         ("gh" "Habbit" entry (file+headline my/org-capture-area-file "Привычки")
-          "* HBBT %?\nSCHEDULED: <%<%Y-%m-%d %a %H:00> +1d>\n:PROPERTIES:\n:STYLE:           Habbit\n:REPEAT_TO_STATE: HBBT\n:END:\n:PROPERTIES:\n:ENTERED_ON: %U\n:END:"
-          :prepend t)
-         ("gt" "TODO" entry (file+headline my/org-capture-project-or-area-file "Задачи")
-          "* TODO %? %^G\nDEADLINE: %^{Deadline}t SCHEDULED: %^{Scheduled}T\n:PROPERTIES:\n:ENTERED_ON: %U\n:END:"
-          :prepend t)
-         ("gn" "Link current note" item (file+headline my/org-capture-project-or-area-file "Заметки")
-          "- %A%?"
-          :prepend nil :unnarrowed t)
-         ("gp" "Link current project" item (file+headline my/org-capture-project-or-area-file "Проекты")
-          "- %A%?"
-          :prepend nil :unnarrowed t)
-         ("ga" "Link current area" item (file+headline my/org-capture-area-file "Ценности")
-          "- %A%?"
-          :prepend nil :unnarrowed t)
-         ;; ("j" "Journal")
-         ;; ("jd" "Daily" entry
-         ;;  (file+olp+datetree +org-capture-journal-file)
-         ;;  "* %U %?\n%i\n%a" :prepend t)
-         ;; ("jw" "Weekly" entry)
-         ;; ("jm" "Monthly" entry)
-         ;; ("jy" "Yearly" entry)
-         ("p" "Templates for projects")
-         ("pt" "Project-local todo" entry
-          (file+headline +org-capture-project-todo-file "Inbox")
-          "* TODO %?\n%i\n%a" :prepend t)
-         ("pn" "Project-local notes" entry
-          (file+headline +org-capture-project-notes-file "Inbox")
-          "* %U %?\n%i\n%a" :prepend t)
-         ("pc" "Project-local changelog" entry
-          (file+headline +org-capture-project-changelog-file "Unreleased")
-          "* %U %?\n%i\n%a" :prepend t)
-         ("pj" "Job Application" entry (file "Организация/Проекты/Трудоустройство/список-отклики_на_вакансии.org")
-          "* TODO %? в %^{Компания}
-DEADLINE: %^{Дедлайн вакансии}t SCHEDULED: %^{Проверить статус}t
-:PROPERTIES:
-:DATE_APPLIED: %t
-:POSITION: %^{Позиция}
-:SOURCE: %^{Источник вакансии|hh.ru|LinkedIn|website|Telegram}
-:CONTACT: %^{Контакт}
-:STATUS: %^{Статус|В ожидании отклика|Жду ответа|Отказ}
-:LOCATION: %^{Локация|Москва|Удалённо}
-:END:
-- [ ] " :prepend t :empty-lines-before 1)
-         ("o" "Centralized templates for projects")
-         ("ot" "Project todo" entry
-          #'+org-capture-central-project-todo-file "* TODO %?\n %i\n %a" :heading "Tasks" :prepend nil)
-         ("on" "Project notes" entry
-          #'+org-capture-central-project-notes-file "* %U %?\n %i\n %a" :heading "Notes" :prepend t)
-         ("oc" "Project changelog" entry
-          #'+org-capture-central-project-changelog-file "* %U %?\n %i\n %a" :heading "Changelog" :prepend t))))
+  (setq org-capture-templates
         ;; ── GTD ──────────────────────────────────────────────────────────
+        `(("g" "GTD")
+          ("gi" "Inbox" entry  (file "Организация/Входящее.org")
+         "* TODO %?\n:PROPERTIES:\n:ID: %(org-id-new)\n:NOTETYPE: задача\n:ENTERED_ON: %U\n:END:"
+         :prepend t :empty-lines-before 1)
+          ("gm" "Meeting" entry  (file+headline "Организация/Расписание.org" "Личное")
+           "* EVENT %? %^G\nSCHEDULED: %^T\n:PROPERTIES:\n:ID: %(org-id-new)\n:NOTETYPE: событие\n:ENTERED_ON: %U\n:END:\n_Участники_: \n_Место_: "
+           :prepend t)
+          ("gc" "Current" entry (file "Организация/Текущее.org")
+           "* TODO %?\nSCHEDULED: %t\n:PROPERTIES:\n:ID: %(org-id-new)\n:NOTETYPE: задача\n:ENTERED_ON: %U\n:END:"
+           :prepend t :empty-lines-before 1)
+          ("gh" "Habbit" entry (file+headline my/org-capture-area-file "Привычки")
+           "* HBBT %?\nSCHEDULED: <%<%Y-%m-%d %a %H:00> +1d>\n:PROPERTIES:\n:ID: %(org-id-new)\n:NOTETYPE: привычка\n:STYLE:           Habbit\n:REPEAT_TO_STATE: HBBT\n:END:\n:PROPERTIES:\n:EFFORT: %^{EFFORT}p\n:ENTERED_ON: %U\n:END:"
+           :prepend t)
+          ("gt" "TODO" entry (file+headline my/org-capture-project-or-area-file "Задачи")
+           "* TODO %^{Задача}%? %^{Обстоятельства|@computer|@telephone|@home|@work|@university|@transfer|@locality|@meeting|@myself}g%^G\nDEADLINE: %^{Deadline}t SCHEDULED: %^{Scheduled}T\n:PROPERTIES:\n:ID: %(org-id-new)\n:NOTETYPE: задача\n:EFFORT: %^{EFFORT}p\n:ENTERED_ON: %U\n:END:"
+           :prepend t)
+          ("gw" "Work" entry (file+headline "Организация/Проекты/АКАДО/проект-акадо.org" "Задачи")
+           "* TODO %^{Задача}%? %^G\nDEADLINE: %^{Deadline}t SCHEDULED: %^{Scheduled}T\n:PROPERTIES:\n:EFFORT: %^{EFFORT}p\n:ENTERED_ON: %U\n:END:"
+           :prepend t)
+
+          ;; ── Notes ────────────────────────────────────────────────────────
+          ("n" "Teplates for notes")
+          ("nn" "Link current note" item (file+headline my/org-capture-project-or-area-file "Заметки")
+           "- %A%?"
+           :prepend nil :unnarrowed t)
+          ("np" "Link current project" item (file+headline my/org-capture-project-or-area-file "Проекты")
+           "- %A%?"
+           :prepend nil :unnarrowed t)
+          ("na" "Link current area" item (file+headline my/org-capture-area-file "Ценности")
+           "- %A%?"
+           :prepend nil :unnarrowed t)
+
+          ;; ── Journal ──────────────────────────────────────────────────────
+          ;; ("j" "Journal")
+          ;; ("jd" "Daily" entry
+          ;;  (file+olp+datetree +org-capture-journal-file)
+          ;;  "* %U %?\n%i\n%a" :prepend t)
+          ;; ("jw" "Weekly" entry)
+          ;; ("jm" "Monthly" entry)
+          ;; ("jy" "Yearly" entry)
+
+          ;; ── Projects ─────────────────────────────────────────────────────
+          ("p" "Templates for projects") ;; TODO написать рабочие функции
+          ("pt" "Project-local todo" entry
+           (file+headline +org-capture-project-todo-file "Inbox")
+           "* TODO %?\n%i\n%a" :prepend t)
+          ("pn" "Project-local notes" entry
+           (file+headline +org-capture-project-notes-file "Inbox")
+           "* %U %?\n%i\n%a" :prepend t)
+          ("pc" "Project-local changelog" entry
+           (file+headline +org-capture-project-changelog-file "Unreleased")
+           "* %U %?\n%i\n%a" :prepend t)
+;;           ("pj" "Job Application" entry (file "Организация/Проекты/Трудоустройство/список-отклики_на_вакансии.org")
+;;            "* TODO %? в %^{Компания}
+;; DEADLINE: %^{Дедлайн вакансии}t SCHEDULED: %^{Проверить статус}t
+;; :PROPERTIES:
+;; :DATE_APPLIED: %t
+;; :POSITION: %^{Позиция}
+;; :SOURCE: %^{Источник вакансии|hh.ru|LinkedIn|website|Telegram}
+;; :CONTACT: %^{Контакт}
+;; :STATUS: %^{Статус|В ожидании отклика|Жду ответа|Отказ}
+;; :LOCATION: %^{Локация|Москва|Удалённо}
+;; :END:
+;; - [ ] " :prepend t :empty-lines-before 1)
+          ("o" "Centralized templates for projects")
+          ("ot" "Project todo" entry
+           #'+org-capture-central-project-todo-file "* TODO %?\n %i\n %a" :heading "Tasks" :prepend nil)
+          ("on" "Project notes" entry
+           #'+org-capture-central-project-notes-file "* %U %?\n %i\n %a" :heading "Notes" :prepend t)
+          ("oc" "Project changelog" entry
+           #'+org-capture-central-project-changelog-file "* %U %?\n %i\n %a" :heading "Changelog" :prepend t))))
 #+end_src
+
 *** Other
 #+begin_src emacs-lisp :tangle yes
 (after! org
@@ -867,7 +878,7 @@ drag&drop functionality
            :empty-lines-before 1)
           ("a" "Конспект" plain "* ${title}\n%?\n* Источник\n%A\n* Ссылки\n* TODO Добавить синонимы, если нужно"
            :target (file+head
-                    "Заметки/%<%Y%m%d%H%M%S>-${slug}.org"
+                    "Заметки/конспект-${slug}.org"
                     ":PROPERTIES:
 :CDATE:     %U
 :ACCESS:   %^{Доступ|public|private|personal|confidentional}
@@ -879,6 +890,23 @@ drag&drop functionality
 ,#+notetype: коспект
 ,#+sourcetype: %^{Тип источника|статья|видео|аудио|занятие}
 ,#+filetags: %^G")
+           :unnarrowed t
+           :empty-lines-before 1)
+          ("r" "Рецепт" plain
+           "* ${title}\n** Ингредиенты\n- %?\n\n** Приготовление\n1. \n\n** Примечания\n\n* Ссылки"
+           :target (file+head
+                    "Организация/Ценности/Питание/Рецепты/рецепт-${slug}.org"
+                    ":PROPERTIES:
+:CDATE:     %U
+:ACCESS:    %^{Доступ|public|private|personal|confidential}
+:ROAM_ALIASES: %^{Синонимы (в кавычках)}
+:END:
+,#+title: ${title}
+,#+author: %n
+,#+date: %U
+,#+language: русский
+,#+notetype: рецепт
+,#+filetags: :рецепт:питание:%^G")
            :unnarrowed t
            :empty-lines-before 1)
           ("x" "Копия" plain "* Источник\n%A\n* ${title}\n%?"
@@ -990,9 +1018,9 @@ drag&drop functionality
 :ALIAS: %\\2
 :EMAIL: %^{Email}
 :PHONE: %^{Phone|+7}
-:ADDRESS: %^{Address}
 :BIRTHDAY: %^{Birtday}
-:NICKNAME: %^{IRC nickname}
+:ADDRESS:
+:NICKNAME:
 :END:
 ,** Заметки
 ,** Проекты
@@ -1397,11 +1425,20 @@ If peep-dired is enabled, you will get image previews as you go up/down with 'j'
 cd ~/
 ln -s ~/.local/share/Trash .
 #+end_example
-* YASnippet
-#+begin_src emacs-lisp :tangle yes
+* Templates
+** [[Capture templates][org-capture]]
+** [[Org-roam-capture][org-roam-capture]]
+** YASnippet
+Шаблоны располагаются в =$DOOMDIR/snippets/{major-mode}/{snippet-name}=.
+Шаблоны новых файлов называются =__=
+
+[[elisp:(+default/browse-templates)][Список шаблонов по умолчанию]]
+#+begin_src emacs-lisp :tangle no
 (after! yasnippet
-  (setq yas-snippet-dirs '((expand-file-name "snippets" doom-user-dir))))
+  (setq yas-snippet-dirs '("~/.dotfiles/.config/doom/snippets")))
 #+end_src
+** Org-tempo
+Вставляет блоки (~begin~-~end~) через =org-insert-structure-template= ([[kbd:SPC C-c C-x s][C-c C-x s]])
 * Projects
 #+begin_src emacs-lisp :tangle yes
 (setq projectile-project-search-path `("~/Documents/Code/" "~/source/" "~/.suckless/" "~/.config/"))
