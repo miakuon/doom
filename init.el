@@ -212,15 +212,7 @@
        ;;zig               ; C, but simpler
 
        :email
-<<<<<<< ours
-<<<<<<< Updated upstream
        (mu4e +mbsync +org +gmail)
-=======
-       (mu4e +mbsync +org +gmail)
->>>>>>> Stashed changes
-=======
-       (mu4e +mbsync +org +gmail)  ;; TODO установить mu
->>>>>>> theirs
        ;;notmuch
        ;;(wanderlust +gmail)
 
