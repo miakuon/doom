@@ -114,11 +114,24 @@ The dashboard that appears when Doom Emacs starts
      'face 'doom-dashboard-banner)))
 
 (setq +doom-dashboard-menu-sections
-      '(("Recently opened files" :icon
-         (nerd-icons-faicon "nf-fa-file_text" :face 'doom-dashboard-menu-title)
+      '(("Open agenda"
+         :icon (nerd-icons-codicon "nf-cod-calendar" :face 'doom-dashboard-menu-title) ;; 
+         :when (fboundp 'org-agenda-list)
+         :action org-agenda-list)
+        ("New task"
+         :icon (nerd-icons-octicon "nf-oct-tasklist" :face 'doom-dashboard-menu-title) ;; 
+         :key "SPC n n"
+         :when (fboundp 'org-capture)
+         :action org-capture)
+        ("Open note"
+         :icon (nerd-icons-mdicon "nf-md-bookshelf" :face 'doom-dashboard-menu-title) ;; 󱉟
+         :when (fboundp 'org-roam-node-find)
+         :action org-roam-node-find)
+        ("Recently opened files"
+         :icon (nerd-icons-faicon "nf-fa-file_text" :face 'doom-dashboard-menu-title)
          :action recentf-open-files)
-        ("Reload last session" :icon
-         (nerd-icons-octicon "nf-oct-history" :face 'doom-dashboard-menu-title)
+        ("Reload last session"
+         :icon (nerd-icons-octicon "nf-oct-history" :face 'doom-dashboard-menu-title)
          :when
          (cond
           ((modulep! :ui workspaces)
@@ -128,32 +141,27 @@ The dashboard that appears when Doom Emacs starts
            (file-exists-p
             (desktop-full-file-name))))
          :action doom/quickload-session)
-        ("Open org-agenda" :icon
-         (nerd-icons-octicon "nf-oct-calendar" :face 'doom-dashboard-menu-title)
-         :when
-         (fboundp 'org-agenda)
-         :action org-agenda)
-        ("Open project" :icon
-         (nerd-icons-octicon "nf-oct-briefcase" :face 'doom-dashboard-menu-title)
+        ("Open project"
+         :icon (nerd-icons-octicon "nf-oct-briefcase" :face 'doom-dashboard-menu-title)
          :action projectile-switch-project)
-        ("Jump to bookmark" :icon
-         (nerd-icons-octicon "nf-oct-bookmark" :face 'doom-dashboard-menu-title)
-         :action bookmark-jump)
-        ("Open private configuration" :icon
-         (nerd-icons-octicon "nf-oct-tools" :face 'doom-dashboard-menu-title)
-         :when
-         (file-directory-p doom-user-dir)
-         :action doom/open-private-config)
-        ("Open documentation" :icon
-         (nerd-icons-octicon "nf-oct-book" :face 'doom-dashboard-menu-title)
-         :action doom/help))
+        ;; ("Jump to bookmark"
+        ;;  :icon (nerd-icons-octicon "nf-oct-bookmark" :face 'doom-dashboard-menu-title)
+        ;;  :action bookmark-jump)
+        ;; ("Open documentation"
+        ;;  :icon (nerd-icons-octicon "nf-oct-book" :face 'doom-dashboard-menu-title)
+        ;;  :action doom/help)
+        ("Open private configuration"
+         :icon (nerd-icons-octicon "nf-oct-tools" :face 'doom-dashboard-menu-title)
+         :when (file-directory-p doom-user-dir)
+         :action doom/open-private-config))
       +doom-dashboard-ascii-banner-fn #'my-doom-dashboard-banner
       +doom-dashboard-inhibit-refresh t
       +doom-dashboard-functions '(doom-dashboard-widget-banner
                                   doom-dashboard-widget-shortmenu
                                   doom-dashboard-widget-loaded
                                   nil))
-#+end_src
+         #+end_src
+
 * Encoding
 #+begin_src emacs-lisp :tangle yes
 (set-language-environment "Russian")
