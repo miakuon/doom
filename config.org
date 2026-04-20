@@ -67,14 +67,11 @@ https://github.com/seagle0128/doom-modeline
   (pixel-scroll-precision-mode 1)
   (setq scroll-step 1
         scroll-conservatively 101
-        auto-window-vscroll nil)
-
-  (setq mouse-wheel-scroll-amount '(1 ((shift) . 1)))
-  (setq mouse-wheel-progressive-speed nil))
-
+        auto-window-vscroll nil
+        scroll-margin 15
+        mouse-wheel-scroll-amount '(1 ((shift) . 1)) ;; отключает скачкообразную прокрутку мышью
+        mouse-wheel-progressive-speed nil))
 #+end_src
-
-#+RESULTS:
 
 ** Start Page
 The dashboard that appears when Doom Emacs starts
