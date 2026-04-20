@@ -16,10 +16,10 @@
   (pixel-scroll-precision-mode 1)
   (setq scroll-step 1
         scroll-conservatively 101
-        auto-window-vscroll nil)
-
-  (setq mouse-wheel-scroll-amount '(1 ((shift) . 1)))
-  (setq mouse-wheel-progressive-speed nil))
+        auto-window-vscroll nil
+        scroll-margin 15
+        mouse-wheel-scroll-amount '(1 ((shift) . 1)) ;; отключает скачкообразную прокрутку мышью
+        mouse-wheel-progressive-speed nil))
 
 (defun my-doom-dashboard-banner ()
   "Custom dashboard banner."
@@ -55,11 +55,24 @@
      'face 'doom-dashboard-banner)))
 
 (setq +doom-dashboard-menu-sections
-      '(("Recently opened files" :icon
-         (nerd-icons-faicon "nf-fa-file_text" :face 'doom-dashboard-menu-title)
+      '(("Open agenda"
+         :icon (nerd-icons-codicon "nf-cod-calendar" :face 'doom-dashboard-menu-title) ;; 
+         :when (fboundp 'org-agenda-list)
+         :action org-agenda-list)
+        ("New task"
+         :icon (nerd-icons-octicon "nf-oct-tasklist" :face 'doom-dashboard-menu-title) ;; 
+         :key "SPC n n"
+         :when (fboundp 'org-capture)
+         :action org-capture)
+        ("Open note"
+         :icon (nerd-icons-mdicon "nf-md-bookshelf" :face 'doom-dashboard-menu-title) ;; 󱉟
+         :when (fboundp 'org-roam-node-find)
+         :action org-roam-node-find)
+        ("Recently opened files"
+         :icon (nerd-icons-faicon "nf-fa-file_text" :face 'doom-dashboard-menu-title)
          :action recentf-open-files)
-        ("Reload last session" :icon
-         (nerd-icons-octicon "nf-oct-history" :face 'doom-dashboard-menu-title)
+        ("Reload last session"
+         :icon (nerd-icons-octicon "nf-oct-history" :face 'doom-dashboard-menu-title)
          :when
          (cond
           ((modulep! :ui workspaces)
@@ -69,25 +82,19 @@
            (file-exists-p
             (desktop-full-file-name))))
          :action doom/quickload-session)
-        ("Open org-agenda" :icon
-         (nerd-icons-octicon "nf-oct-calendar" :face 'doom-dashboard-menu-title)
-         :when
-         (fboundp 'org-agenda)
-         :action org-agenda)
-        ("Open project" :icon
-         (nerd-icons-octicon "nf-oct-briefcase" :face 'doom-dashboard-menu-title)
+        ("Open project"
+         :icon (nerd-icons-octicon "nf-oct-briefcase" :face 'doom-dashboard-menu-title)
          :action projectile-switch-project)
-        ("Jump to bookmark" :icon
-         (nerd-icons-octicon "nf-oct-bookmark" :face 'doom-dashboard-menu-title)
-         :action bookmark-jump)
-        ("Open private configuration" :icon
-         (nerd-icons-octicon "nf-oct-tools" :face 'doom-dashboard-menu-title)
-         :when
-         (file-directory-p doom-user-dir)
-         :action doom/open-private-config)
-        ("Open documentation" :icon
-         (nerd-icons-octicon "nf-oct-book" :face 'doom-dashboard-menu-title)
-         :action doom/help))
+        ;; ("Jump to bookmark"
+        ;;  :icon (nerd-icons-octicon "nf-oct-bookmark" :face 'doom-dashboard-menu-title)
+        ;;  :action bookmark-jump)
+        ;; ("Open documentation"
+        ;;  :icon (nerd-icons-octicon "nf-oct-book" :face 'doom-dashboard-menu-title)
+        ;;  :action doom/help)
+        ("Open private configuration"
+         :icon (nerd-icons-octicon "nf-oct-tools" :face 'doom-dashboard-menu-title)
+         :when (file-directory-p doom-user-dir)
+         :action doom/open-private-config))
       +doom-dashboard-ascii-banner-fn #'my-doom-dashboard-banner
       +doom-dashboard-inhibit-refresh t
       +doom-dashboard-functions '(doom-dashboard-widget-banner
@@ -164,6 +171,10 @@
   (map! :leader
         (:prefix "m"
          :desc "Cycle list bullets"     [TAB]  #'org-cycle-list-bullet)))
+
+(after! org
+  (require 'org-depend)
+  (add-to-list 'org-modules 'org-depend))
 
 (after! org
   ;; (defvar org-agenda-subdirectory "Организация" "Directory in org-directory that contains all organization realted files")
@@ -475,7 +486,7 @@
 #+author: %n
 #+date: %U
 #+language: %^{Язык|русский|english|français|中文}
-#+notetype: коспект
+#+notetype: конспект
 #+sourcetype: %^{Тип источника|статья|видео|аудио|занятие}
 #+filetags: %^G")
            :unnarrowed t
@@ -586,29 +597,30 @@
 #+filetags: :${slug}:%^G")
            :unnarrowed t
            :empty-lines-before 1)
-          ("p" "Person" plain "%?"
+          ("p" "Контакт" plain "%?"
            :target (file+head
-                    "Люди/person-${slug}.org"
+                    "Контакты/контакт-${slug}.org"
                     ":PROPERTIES:
 :CDATE:         %U
-:ACCESS:       %^{Доступ|public|private|personal|confidentional}
-:ROAM_ALIASES: %^{Синонимы (в кавычках)}
+:ACCESS:       %^{Доступ|private|public|personal|confidentional}
+:ROAM_ALIASES: \"%^{Полное имя|${title}}\"
+:CATEGORY: %^{Agenda category|${title}}
 :END:
-#+title: ${title}
+#+title: %^{Записать как|\\3|${title}}
 #+author: %n
 #+date: %U
 #+language: русский
-#+notetype: человек
-#+filetags:
+#+notetype: контакт
+#+filetags: %^G
 
-* ${title}
+* %\\4
 :PROPERTIES:
 :ALIAS: %\\2
-:EMAIL: %^{Email}
 :PHONE: %^{Phone|+7}
+:EMAIL: %^{Email}
 :BIRTHDAY: %^{Birtday}
-:ADDRESS:
-:NICKNAME:
+:ADDRESS: %^{Address}
+:TELEGRAM: %^{Telegram}
 :END:
 ** Заметки
 ** Проекты
@@ -616,6 +628,29 @@
 :PROPERTIES:
 :VISIBILITY: content
 :END:")
+           :unnarrowed t)
+          ("P" "Человек" plain "%?"
+           :target (file+head
+                    "Заметки/человек-${slug}.org"
+                    ":PROPERTIES:
+:CDATE:         %U
+:ACCESS:       %^{Доступ|private|personal|confidentional}
+:ROAM_ALIASES: %^{Синонимы (в кавычках)}
+:END:
+#+title: ${title}
+#+author: %n
+#+date: %U
+#+language: русский
+#+notetype: человек
+#+filetags: %^G
+
+* ${title}
+:PROPERTIES:
+:BIRTHDAY: %^{Birtday}
+:DEATHDAY: %^{Death date}
+:END:
+** Заметки
+")
            :unnarrowed t))))
 
 (defun extract-org-roam-templates ()
