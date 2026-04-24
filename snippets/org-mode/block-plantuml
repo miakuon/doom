@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: plantuml-diagram
+# key: diag
+# condition: t
+# --
+#+begin_src plantuml :file ./attachments/_-diagram-_.svg :exports results :cache yes :noweb no-export :results file
+@startuml
+$0
+@enduml
+#+end_src

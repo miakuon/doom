@@ -346,49 +346,58 @@ I wrapped most of this block in (after! org).  Without this, my settings might b
 *** Capture templates
 #+begin_src emacs-lisp :tangle yes
 
-;;; ─── Вспомогательные функции для capture ─────────────────────────────────────────────
-(defun my/org-capture-area-file ()
-  "Prompt for an area-file"
-  (read-file-name "Ценность: "
-                  "~/Гримуар/Организация/Ценности/"
-                  nil t nil
-                  (lambda (f)
-                    (and (file-regular-p f)
-                         (string-match "ценность-.*\\.org\\'" f)))))
+;;; ─── Вспомогательные функции для capture ──────────────────────────────────────────────
+(defun my/org-gtd-files ()
+  "List my nessesary org gtd files"
+  (seq-filter #'file-regular-p
+              (append
+               (list (concat org-directory "Организация/Входящее.org")
+                     (concat org-directory "Организация/Рекомендации.org"))
+               (file-expand-wildcards (concat org-directory "Организация/Ценности/**/ценность-*.org"))
+               (file-expand-wildcards (concat org-directory "Организация/Проекты/**/проект-*.org"))
+               (file-expand-wildcards (concat org-directory "Контакты/*.org")))))
 
-(defun my/org-capture-project-or-area-file ()
-  "Prompt for an area- or proj-file"
-  (completing-read
-   "Выберите файл: "
-   (append
-    (file-expand-wildcards (concat org-directory "Организация/Ценности/*/ценность-*.org"))
-    (file-expand-wildcards (concat org-directory "Организация/Проекты/*/проект-*.org")))))
+(defun my/prompt-my-org-gtd-files ()
+  "Prompts for my org gtd files returned by my/org-gtd-files"
+  (completing-read "GTD file: " (my/org-gtd-files)))
 
 ;;; ─── Шаблоны capture ──────────────────────────────────────────────────────────────────
 (after! org
   (setq org-capture-templates
-        ;; ── GTD ──────────────────────────────────────────────────────────
+        ;; ── GTD ────────────────────────────────────────────────────────────────────────
         `(("g" "GTD")
-          ("gi" "Inbox" entry  (file "Организация/Входящее.org")
-         "* TODO %?\n:PROPERTIES:\n:ID: %(org-id-new)\n:NOTETYPE: задача\n:ENTERED_ON: %U\n:END:"
-         :prepend t :empty-lines-before 1)
-          ("gm" "Meeting" entry  (file+headline "Организация/Расписание.org" "Личное")
-           "* EVENT %? %^G\nSCHEDULED: %^T\n:PROPERTIES:\n:ID: %(org-id-new)\n:NOTETYPE: событие\n:ENTERED_ON: %U\n:END:\n_Участники_: \n_Место_: "
-           :prepend t)
-          ("gc" "Current" entry (file "Организация/Текущее.org")
-           "* TODO %?\nSCHEDULED: %t\n:PROPERTIES:\n:ID: %(org-id-new)\n:NOTETYPE: задача\n:ENTERED_ON: %U\n:END:"
-           :prepend t :empty-lines-before 1)
-          ("gh" "Habbit" entry (file+headline my/org-capture-area-file "Привычки")
-           "* HBBT %?\nSCHEDULED: <%<%Y-%m-%d %a %H:00> +1d>\n:PROPERTIES:\n:ID: %(org-id-new)\n:NOTETYPE: привычка\n:STYLE:           Habbit\n:REPEAT_TO_STATE: HBBT\n:END:\n:PROPERTIES:\n:EFFORT: %^{EFFORT}p\n:ENTERED_ON: %U\n:END:"
-           :prepend t)
-          ("gt" "TODO" entry (file+headline my/org-capture-project-or-area-file "Задачи")
-           "* TODO %^{Задача}%? %^{Обстоятельства|@computer|@telephone|@home|@work|@university|@transfer|@locality|@meeting|@myself}g%^G\nDEADLINE: %^{Deadline}t SCHEDULED: %^{Scheduled}T\n:PROPERTIES:\n:ID: %(org-id-new)\n:NOTETYPE: задача\n:EFFORT: %^{EFFORT}p\n:ENTERED_ON: %U\n:END:"
-           :prepend t)
-          ("gw" "Work" entry (file+headline "Организация/Проекты/АКАДО/проект-акадо.org" "Задачи")
-           "* TODO %^{Задача}%? %^G\nDEADLINE: %^{Deadline}t SCHEDULED: %^{Scheduled}T\n:PROPERTIES:\n:EFFORT: %^{EFFORT}p\n:ENTERED_ON: %U\n:END:"
-           :prepend t)
 
-          ;; ── Notes ────────────────────────────────────────────────────────
+          ("gi" "Quick task" entry  (file "Организация/Входящее.org")
+           "%[~/.dotfiles/.config/doom/templates/entry-quick-task.org]"
+           :prepend t :empty-lines-before 1 :clock-keep t :kill-buffer t)
+          ;; TODO :refile-targets my/org-gtd-files - нужен список (FILES . SPECIFICATION)
+          ("gt" "Full task" entry (file "Организация/Входящее.org")
+           "%[~/.dotfiles/.config/doom/templates/entry-full-task.org]"
+           :prepend t :empty-lines-before 1 :clock-keep t :kill-buffer t)
+          ("ge" "Event" entry  (file "Организация/Входящее.org")
+           "%[~/.dotfiles/.config/doom/templates/entry-event.org]"
+           :prepend t :empty-lines-before 1 :clock-keep t :kill-buffer t)
+          ("gh" "Habbit" entry (file "Организация/Входящее.org")
+           "%[~/.dotfiles/.config/doom/templates/entry-habbit.org]"
+           :prepend t :empty-lines-before 1 :clock-keep t :kill-buffer t)
+
+          ("gT" "Task in project" entry (file+headline my/prompt-my-org-gtd-files "Задачи")
+           "%[~/.dotfiles/.config/doom/templates/entry-full-task.org]"
+           :prepend t :jump-to-captured t :unnarrowed t)
+          ("gE" "Event in project" entry  (file+headline my/prompt-my-org-gtd-files "Расписание")
+           "%[~/.dotfiles/.config/doom/templates/entry-event.org]"
+           :prepend t :jump-to-captured t :unnarrowed t)
+          ("gH" "Habbit in project" entry (file+headline my/prompt-my-org-gtd-files "Привычки")
+           "%[~/.dotfiles/.config/doom/templates/entry-habbit.org]"
+           :prepend t :jump-to-captured t :unnarrowed t)
+          ;; ("gc" "Current" entry (file "Организация/Текущее.org")
+          ;;  "* TODO %?\nSCHEDULED: %t\n:PROPERTIES:\n:ID: %(org-id-new)\n:NOTETYPE: задача\n:ENTERED_ON: %U\n:END:"
+          ;;  :prepend t :empty-lines-before 1)
+          ;; ("gw" "Work" entry (file+headline "Организация/Проекты/АКАДО/проект-акадо.org" "Задачи")
+          ;;  "* TODO %^{Задача}%? %^G\nDEADLINE: %^{Deadline}t SCHEDULED: %^{Scheduled}T\n:PROPERTIES:\n:EFFORT: %^{EFFORT}p\n:ENTERED_ON: %U\n:END:"
+          ;;  :prepend t)
+
+          ;; ── Notes ────────────────────────────────────────────────────────────────────
           ("n" "Teplates for notes")
           ("nn" "Link current note" item (file+headline my/org-capture-project-or-area-file "Заметки")
            "- %A%?"
@@ -420,18 +429,18 @@ I wrapped most of this block in (after! org).  Without this, my settings might b
           ("pc" "Project-local changelog" entry
            (file+headline +org-capture-project-changelog-file "Unreleased")
            "* %U %?\n%i\n%a" :prepend t)
-;;           ("pj" "Job Application" entry (file "Организация/Проекты/Трудоустройство/список-отклики_на_вакансии.org")
-;;            "* TODO %? в %^{Компания}
-;; DEADLINE: %^{Дедлайн вакансии}t SCHEDULED: %^{Проверить статус}t
-;; :PROPERTIES:
-;; :DATE_APPLIED: %t
-;; :POSITION: %^{Позиция}
-;; :SOURCE: %^{Источник вакансии|hh.ru|LinkedIn|website|Telegram}
-;; :CONTACT: %^{Контакт}
-;; :STATUS: %^{Статус|В ожидании отклика|Жду ответа|Отказ}
-;; :LOCATION: %^{Локация|Москва|Удалённо}
-;; :END:
-;; - [ ] " :prepend t :empty-lines-before 1)
+          ;;           ("pj" "Job Application" entry (file "Организация/Проекты/Трудоустройство/список-отклики_на_вакансии.org")
+          ;;            "* TODO %? в %^{Компания}
+          ;; DEADLINE: %^{Дедлайн вакансии}t SCHEDULED: %^{Проверить статус}t
+          ;; :PROPERTIES:
+          ;; :DATE_APPLIED: %t
+          ;; :POSITION: %^{Позиция}
+          ;; :SOURCE: %^{Источник вакансии|hh.ru|LinkedIn|website|Telegram}
+          ;; :CONTACT: %^{Контакт}
+          ;; :STATUS: %^{Статус|В ожидании отклика|Жду ответа|Отказ}
+          ;; :LOCATION: %^{Локация|Москва|Удалённо}
+          ;; :END:
+          ;; - [ ] " :prepend t :empty-lines-before 1)
           ("o" "Centralized templates for projects")
           ("ot" "Project todo" entry
            #'+org-capture-central-project-todo-file "* TODO %?\n %i\n %a" :heading "Tasks" :prepend nil)
@@ -843,207 +852,60 @@ drag&drop functionality
 *** Org-roam-capture
 #+begin_src emacs-lisp :tangle yes
 (after! org
+  ;; (setq doom-user-templates-dir (expand-file-name "templates/" doom-user-dir))
+
   (setq org-roam-capture-templates
-        `(("c" "Записка, Черновик" plain "%?\n* Ссылки"
-           :target (file+head
-                    "Заметки/Входящие/%<%Y%m%d%H%M%S>.org"
-                    ":PROPERTIES:
-:CDATE:     %U
-:END:
-,#+title: ${title}
-,#+date: %U
-,#+notetype: %^{Тип заметки|записка|черновик}
-,#+filetags: %^G")
-           :unnarrowed t
-           :empty-lines-before 1)
-          ("f" "Фундаментальная, Мысль, Цитата" plain "%?\n* Ссылки\n** Связи\n** Источники"
-           :target (file+head
-                    "Заметки/%<%Y%m%d%H%M%S>-${slug}.org"
-                    ":PROPERTIES:
-:CDATE:     %U
-:ACCESS:   %^{Доступ|public|private|personal|confidentional}
-:ROAM_ALIASES: %^{Синонимы (в кавычках)}
-:END:
-,#+title: ${title}
-,#+author: %n
-,#+date: %U
-,#+language: %^{Язык|русский|english|français|中文}
-,#+notetype: %^{Тип заметки|фундаментальная|мысль|цитата}
-,#+filetags: %^G")
-           :unnarrowed t
-           :empty-lines-before 1)
-          ("n" "Заметка, Статья, Руководство" plain "* ${title}\n%?\n* Ссылки"
-           :target (file+head
-                    "Заметки/%<%Y%m%d%H%M%S>-${slug}.org"
-                    ":PROPERTIES:
-:CDATE:     %U
-:ACCESS:   %^{Доступ|public|private|personal|confidentional}
-:ROAM_ALIASES: %^{Синонимы (в кавычках)}
-:END:
-,#+title: ${title}
-,#+author: %n
-,#+date: %U
-,#+language: русский
-,#+notetype: %^{Тип заметки|заметка|статья|руководство}
-,#+filetags: %^G")
-           :unnarrowed t
-           :empty-lines-before 1)
-          ("a" "Конспект" plain "* ${title}\n%?\n* Источник\n%A\n* Ссылки\n* TODO Добавить синонимы, если нужно"
-           :target (file+head
-                    "Заметки/конспект-${slug}.org"
-                    ":PROPERTIES:
-:CDATE:     %U
-:ACCESS:   %^{Доступ|public|private|personal|confidentional}
-:END:
-,#+title: ${title}
-,#+author: %n
-,#+date: %U
-,#+language: %^{Язык|русский|english|français|中文}
-,#+notetype: коспект
-,#+sourcetype: %^{Тип источника|статья|видео|аудио|занятие}
-,#+filetags: %^G")
-           :unnarrowed t
-           :empty-lines-before 1)
-          ("r" "Рецепт" plain
-           "* ${title}\n** Ингредиенты\n- %?\n\n** Приготовление\n1. \n\n** Примечания\n\n* Ссылки"
-           :target (file+head
-                    "Организация/Ценности/Питание/Рецепты/рецепт-${slug}.org"
-                    ":PROPERTIES:
-:CDATE:     %U
-:ACCESS:    %^{Доступ|public|private|personal|confidential}
-:ROAM_ALIASES: %^{Синонимы (в кавычках)}
-:END:
-,#+title: ${title}
-,#+author: %n
-,#+date: %U
-,#+language: русский
-,#+notetype: рецепт
-,#+filetags: :рецепт:питание:%^G")
-           :unnarrowed t
-           :empty-lines-before 1)
-          ("x" "Копия" plain "* Источник\n%A\n* ${title}\n%?"
-           :target (file+head
-                    "Заметки/%<%Y%m%d%H%M%S>-${slug}.org"
-                    ":PROPERTIES:
-:CDATE:     %U
-:ACCESS:   %^{Доступ|public|private|personal|confidentional}
-:ROAM_ALIASES: %^{Синонимы (в кавычках)}
-:END:
-,#+title: ${title}
-,#+author: %n
-,#+date: %U
-,#+language: %^{Язык|русский|english|français|中文}
-,#+notetype: копия
-,#+sourcetype: %^{Тип источника|статья|видео|аудио|занятие}
-,#+filetags: %^G"))
+        `(("c" "Записка, Черновик"
+           plain (file "~/.dotfiles/.config/doom/templates/file-черновик.org")
+           :target (file "Заметки/Входящие/%<%Y%m%d%H%M%S>.org")
+           :unnarrowed t)
+          ("f" "Фундаментальная, Мысль, Цитата"
+           plain (file "~/.dotfiles/.config/doom/templates/file-фундаментальная_заметка.org")
+           :target (file "Заметки/%<%Y%m%d%H%M%S>-${slug}.org")
+           :unnarrowed t)
+          ("n" "Заметка, Статья, Руководство"
+           plain (file "~/.dotfiles/.config/doom/templates/file-заметка.org")
+           :target (file "Заметки/%<%Y%m%d%H%M%S>-${slug}.org")
+           :unnarrowed t)
+          ("a" "Конспект"
+           plain (file "~/.dotfiles/.config/doom/templates/file-конспект.org")
+           :target (file "Заметки/конспект-${slug}.org")
+           :unnarrowed t)
+          ("r" "Рецепт"
+           plain (file "~/.dotfiles/.config/doom/templates/file-рецепт.org")
+           :target (file "Организация/Ценности/Питание/Рецепты/рецепт-${slug}.org")
+           :unnarrowed t)
+          ("x" "Копия"
+           plain (file "~/.dotfiles/.config/doom/templates/file-копия.org")
+           :target (file "Заметки/%<%Y%m%d%H%M%S>-${slug}.org")
+           :unnarrowed t)
+          ("p" "Контакт"
+           plain (file "~/.dotfiles/.config/doom/templates/file-контакт.org")
+           :target (file "Контакты/контакт-${slug}.org")
+           :unnarrowed t)
+          ("P" "Человек"
+           plain (file "~/.dotfiles/.config/doom/templates/file-черновик.org")
+           :target (file "Заметки/человек-${slug}.org")
+           :unnarrowed t)
+
           ("o" "Организация")
-          ("oa" "Ценность" plain
-           "* Цели
-%?
-,* Ценности
-,* Проекты
-,* Привычки
-:PROPERTIES:
-:CATEGORY: Привычка
-:VISIBILITY: content
-:END:
-,* Заметки
-,* Задачи
-:PROPERTIES:
-:VISIBILITY: content
-:END:"
-
-           :target (file+head
-                    "Организация/Ценности/ценность-${slug}.org"
-                    ":PROPERTIES:
-:CDATE:         %U
-:ACCESS:       %^{Доступ|public|private|personal|confidentional}
-:CATEGORY:     %^{Category для Agenda}
-:ROAM_ALIASES: %^{Синонимы (в кавычках)}
-:END:
-,#+title: ${title}
-,#+author: %n
-,#+date: %U
-,#+language: русский
-,#+notetype: организация
-,#+filetags: :${slug}:%^G")
-           :unnarrowed t
-           :empty-lines-before 1)
-          ("op" "Проект" plain
-           "* Цели
-%?
-,* Заметки
-,* Проекты
-,* Задачи
-:PROPERTIES:
-:VISIBILITY: content
-:END:"
-           :target (file+head
-                    "Организация/Проекты/${title}/проект-${slug}.org"
-                    ":PROPERTIES:
-:CDATE:         %U
-:ACCESS:       %^{Доступ|public|private|personal|confidentional}
-:CATEGORY:     %^{Category для Agenda}
-:ROAM_ALIASES: %^{Синонимы (в кавычках)}
-:END:
-,#+title: ${title}
-,#+author: %n
-,#+date: %U
-,#+language: русский
-,#+notetype: организация
-,#+filetags: :${slug}:%^G")
-           :unnarrowed t
-           :empty-lines-before 1)
-          ("or" "План" plain "* Цели\n%?\n* План\n* Заметки\n* Проекты"
-           :target (file+head
-                    "Организация/Планирование/план-${slug}.org"
-                    ":PROPERTIES:
-:CDATE:         %U
-:ACCESS:       %^{Доступ|public|private|personal|confidentional}
-:ROAM_ALIASES: %^{Синонимы (в кавычках)}
-:END:
-,#+title: ${title}
-,#+author: %n
-,#+date: %U
-,#+language: русский
-,#+notetype: организация
-,#+filetags: :${slug}:%^G")
-           :unnarrowed t
-           :empty-lines-before 1)
-          ("p" "Person" plain "%?"
-           :target (file+head
-                    "Люди/person-${slug}.org"
-                    ":PROPERTIES:
-:CDATE:         %U
-:ACCESS:       %^{Доступ|public|private|personal|confidentional}
-:ROAM_ALIASES: %^{Синонимы (в кавычках)}
-:END:
-,#+title: ${title}
-,#+author: %n
-,#+date: %U
-,#+language: русский
-,#+notetype: человек
-,#+filetags:
-
-,* ${title}
-:PROPERTIES:
-:ALIAS: %\\2
-:EMAIL: %^{Email}
-:PHONE: %^{Phone|+7}
-:BIRTHDAY: %^{Birtday}
-:ADDRESS:
-:NICKNAME:
-:END:
-,** Заметки
-,** Проекты
-,** Задачи
-:PROPERTIES:
-:VISIBILITY: content
-:END:")
+          ("oa" "Ценность"
+           plain (file "~/.dotfiles/.config/doom/templates/file-ценность.org")
+           :target (file "Организация/Ценности/ценность-${slug}.org")
+           :unnarrowed t)
+          ("op" "Проект"
+           plain (file "~/.dotfiles/.config/doom/templates/file-проект.org")
+           :target (file "Организация/Проекты/${title}/проект-${slug}.org")
+           :unnarrowed t)
+          ("or" "План"
+           plain (file "~/.dotfiles/.config/doom/templates/file-план.org")
+           :target (file "Организация/Планирование/план-${slug}.org")
            :unnarrowed t))))
 #+end_src
-**** TODO Org-roam-capture-templates tangle
-#+begin_src emacs-lisp :tangle yes
+
+**** CANCELLED Org-roam-capture-templates tangle
+CLOSED: [2026-04-21 Вт 04:25]
+#+begin_src emacs-lisp :tangle no
 (defun extract-org-roam-templates ()
   "Extract org-roam-capture-templates from config.org and save to org-roam-templates.el"
   (let ((config-file (expand-file-name "config.org" doom-user-dir))
@@ -1449,9 +1311,14 @@ ln -s ~/.local/share/Trash .
 Шаблоны новых файлов называются =__=
 
 [[elisp:(+default/browse-templates)][Список шаблонов по умолчанию]]
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp :tangle yes
 (after! yasnippet
-  (setq yas-snippet-dirs '("~/.dotfiles/.config/doom/snippets")))
+  ;; (setq yas-snippet-dirs '("~/.dotfiles/.config/doom/snippets")) ;; default (+snippets-dir doom-snippets-dir +file-templates-dir)
+
+  (map! :map yas-keymap
+        :after org
+        "TAB" #'yas-next-field       ;; TODO сделать рабочим в org-mode
+        "C-<tab>" #'yas-next-field)) ;; а не использовать этот костыль
 #+end_src
 ** Org-tempo
 Вставляет блоки (~begin~-~end~) через =org-insert-structure-template= ([[kbd:SPC C-c C-x s][C-c C-x s]])

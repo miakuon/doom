@@ -1,0 +1,6 @@
+* TODO %?
+:PROPERTIES:
+:ID: %(org-id-new)
+:NOTETYPE: задача
+:ENTERED_ON: %U
+:END:

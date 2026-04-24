@@ -1,0 +1,12 @@
+:PROPERTIES:
+:CDATE:         %U
+:ACCESS:        confidentional
+:CATEGORY:      дневник
+:ID:            %(org-id-get-create)
+:END:
+#+title: ${title}
+#+author: %n
+#+date: %U
+#+language: русский
+#+notetype: дневник
+#+filetags: :дневник:

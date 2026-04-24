@@ -1,0 +1,17 @@
+:PROPERTIES:
+:CDATE:     %U
+:ACCESS:   %^{Доступ|public|private|personal|confidentional}
+:END:
+#+title: ${title}
+#+author: %n
+#+date: %U
+#+language: %^{Язык|русский|english|français|中文}
+#+notetype: конспект
+#+sourcetype: %^{Тип источника|статья|видео|аудио|занятие}
+#+filetags: %^G
+
+* ${title}
+%?
+* Ссылки
+_Источник_: %A
+* TODO Добавить синонимы, если нужно

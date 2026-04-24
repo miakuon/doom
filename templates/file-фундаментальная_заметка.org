@@ -1,0 +1,16 @@
+:PROPERTIES:
+:CDATE:        %U
+:ACCESS:       %^{Доступ|public|private|personal|confidentional}
+:ROAM_ALIASES: %^{Синонимы (в кавычках)}
+:END:
+#+title: ${title}
+#+author: %n
+#+date: %U
+#+language: %^{Язык|русский|english|français|中文}
+#+notetype: %^{Тип заметки|фундаментальная|мысль|цитата}
+#+filetags: %^G
+
+%?
+* Ссылки
+** Связи
+** Источники

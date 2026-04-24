@@ -1,0 +1,22 @@
+:PROPERTIES:
+:CDATE:     %U
+:ACCESS:    %^{Доступ|public|private|personal|confidential}
+:ROAM_ALIASES: %^{Синонимы (в кавычках)}
+:END:
+#+title: ${title}
+#+author: %n
+#+date: %U
+#+language: русский
+#+notetype: рецепт
+#+filetags: :рецепт:питание:%^G
+
+* ${title}
+** Ингредиенты
+- %?
+
+** Приготовление
+1.
+
+** Примечания
+
+* Ссылки

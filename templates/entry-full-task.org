@@ -1,0 +1,8 @@
+* TODO %^{Задача}%? %^{Обстоятельства|@computer|@telephone|@home|@work|@university|@transfer|@locality|@meeting|@myself}g%^G
+DEADLINE: %^{Deadline}t SCHEDULED: %^{Scheduled}T
+:PROPERTIES:
+:ID: %(org-id-new)
+:NOTETYPE: задача
+:EFFORT: %^{EFFORT}p
+:ENTERED_ON: %U
+:END:

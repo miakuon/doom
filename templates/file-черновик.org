@@ -1,0 +1,10 @@
+:PROPERTIES:
+:CDATE:     %U
+:END:
+#+title: ${title}
+#+date: %U
+#+notetype: %^{Тип заметки|записка|черновик}
+#+filetags: %^G
+
+%?
+* Ссылки

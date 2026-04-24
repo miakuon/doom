@@ -1,0 +1,22 @@
+:PROPERTIES:
+:CDATE:         %U
+:ACCESS:       %^{Доступ|public|private|personal|confidentional}
+:CATEGORY:     %^{Category для Agenda}
+:ROAM_ALIASES: %^{Синонимы (в кавычках)}
+:ID:           %(org-id-get-create)
+:END:
+#+title: ${title}
+#+author: %n
+#+date: %U
+#+language: русский
+#+notetype: организация
+#+filetags: :${slug}:%^G
+
+* Цели
+%?
+* Проекты
+* Заметки
+* Задачи
+:PROPERTIES:
+:VISIBILITY: content
+:END:

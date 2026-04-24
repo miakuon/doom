@@ -1,0 +1,10 @@
+* HBBT %?
+SCHEDULED: <%<%Y-%m-%d %a %H:00> +1d>
+:PROPERTIES:
+:ID: %(org-id-new)
+:NOTETYPE: привычка
+:STYLE:           Habbit
+:REPEAT_TO_STATE: HBBT
+:EFFORT: %^{EFFORT}p
+:ENTERED_ON: %U
+:END:

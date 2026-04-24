@@ -1,0 +1,8 @@
+* IDEA %^{Ресурс}%? %^G
+:PROPERTIES:
+:ID: %(org-id-new)
+:NOTETYPE: ресурс
+:ENTERED_ON: %U
+:END:
+_Ресурс_:
+_Рекомендатель_:

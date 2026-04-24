@@ -1,0 +1,28 @@
+:PROPERTIES:
+:CDATE:         %U
+:ACCESS:       %^{Доступ|private|public|personal|confidentional}
+:ROAM_ALIASES: "%^{Полное имя|${title}}"
+:CATEGORY:     %^{Agenda category|${title}}
+:END:
+#+title: %^{Записать как|%\3|${title}}
+#+author: %n
+#+date: %U
+#+language: русский
+#+notetype: контакт
+#+filetags: %^G
+
+* %\4
+:PROPERTIES:
+:ALIAS: %\2
+:PHONE: %^{Phone|+7}
+:EMAIL: %^{Email}
+:BIRTHDAY: %^{Birtday}
+:ADDRESS: %^{Address}
+:TELEGRAM: %^{Telegram}
+:END:
+** Заметки
+** Проекты
+** Задачи
+:PROPERTIES:
+:VISIBILITY: content
+:END:
